@@ -17,6 +17,7 @@
     "storybook:build": "npm run analyze -- --exclude dist && build-storybook"
   },
   "dependencies": {
+    "@lrnwebcomponents/rpg-character": "^4.0.20",
     "lit": "^2.0.2"
   },
   "devDependencies": {
