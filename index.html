@@ -9,21 +9,11 @@
   </style>
 </head>
 <body>
-  <div id="demo"></div>
 
   <script type="module">
-    import { html, render } from 'lit';
-    import '../whos-here.js';
-
-    const title = 'Hello owc World!';
-    render(
-      html`
-        <whos-here .title=${title}>
-          some light-dom
-        </whos-here>
-      `,
-      document.querySelector('#demo')
-    );
+    import './whos-here.js';
   </script>
+
+  <whos-here></whos-here>
 </body>
 </html>

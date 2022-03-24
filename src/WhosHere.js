@@ -1,6 +1,10 @@
 import { html, css, LitElement } from 'lit';
 
 export class WhosHere extends LitElement {
+  static get tag() {
+    return 'whos-here';
+  }
+  
   static get styles() {
     return css`
       :host {
@@ -35,3 +39,5 @@ export class WhosHere extends LitElement {
     `;
   }
 }
+
+window.customElements.define(WhosHere.tag, WhosHere);
