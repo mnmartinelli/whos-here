@@ -1,4 +1,5 @@
 import { html, css, LitElement } from 'lit';
+import '@lrnwebcomponents/rpg-character/rpg-character.js';
 
 export class WhosHere extends LitElement {
   static get tag() {
@@ -47,20 +48,39 @@ export class WhosHere extends LitElement {
     let display = this.shadowRoot.querySelector('#display_users');
     display.innerHTML = '';
 
-    const circle = document.createElement('div');
-    circle.className = 'circle';
+    const base = document.createElement('div');
+    console.log(base);
+    base.className = 'base';
 
     const tooltip = document.createElement('span');
     tooltip.className = 'tooltip';
     tooltip.innerHTML = 'info';
+    base.appendChild(tooltip);
 
-    circle.appendChild(tooltip);
+    const rpgChar = document.createElement('rpg-character');
+    rpgChar.className = 'rpg';
+    const style = document.createElement('style');
+    rpgChar.appendChild(style);
+    base.appendChild(rpgChar);
 
+    const background = document.createElement('img');
+    background.setAttribute('src', '/images/white-background.svg');
+    background.className = 'backing';
+    base.appendChild(background);
+
+    const ring = document.createElement('div');
+    ring.className = 'ring-color';
     const colors = ['#ff0000', '#00ff00', '#0000ff'];
     const randomColor = colors[Math.floor(Math.random() * colors.length)];
-    circle.style.backgroundColor = randomColor;
+    ring.style.border = `5px solid${randomColor}`;
 
-    this.users.push(circle);
+    base.appendChild(ring);
+
+    const container = document.createElement('slot');
+    container.className = 'container';
+    container.appendChild(base);
+
+    this.users.push(container);
 
     // Adds each user from users array to display div.
     this.users.forEach(user => {
@@ -77,15 +97,35 @@ export class WhosHere extends LitElement {
 
   static get styles() {
     return css`
-      .circle {
+      .container {
+        width: 20%;
+        height: 20%;
+      }
+      .container .base {
         float: left;
-        height: 50px;
-        width: 50px;
+        height: 142px;
+        width: 113px;
         border: 1px;
         border-color: white;
-        border-radius: 100%;
+        position: relative;
       }
-      .circle .tooltip {
+      .container .base .ring-color {
+        position: absolute;
+        border-radius: 100%;
+        height: 83px;
+        width: 83px;
+        left: 10px;
+        top: 0%;
+        z-index: 2;
+      }
+      .container .base .backing {
+        z-index: 1;
+      }
+      .container .base .rpg {
+        position: absolute;
+        z-index: -1;
+      }
+      .container .base .tooltip {
         visibility: hidden;
         width: 100px;
         background-color: gray;
@@ -95,12 +135,12 @@ export class WhosHere extends LitElement {
         padding: 5px;
 
         position: absolute;
-        z-index: 1;
-        top: 9%;
-        margin-left: -4%;
+        z-index: 3;
+        top: 70%;
+        margin-left: -2%;
       }
 
-      .circle .tooltip::after {
+      .container .base .tooltip::after {
         content: ' ';
         position: absolute;
         bottom: 100%; /* At the bottom of the tooltip */
@@ -111,19 +151,25 @@ export class WhosHere extends LitElement {
         border-color: transparent transparent gray transparent;
       }
 
-      .circle:hover .tooltip {
+      .container .base:hover .tooltip {
         visibility: visible;
-      }
-
-      #display_users {
-        height: 100px;
-        overflow: hidden;
       }
     `;
   }
 
   render() {
     return html`
+      <!-- <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 105 105">
+  <defs>
+  <style>.cls-1{fill:none;stroke:#000;stroke-miterlimit:10;stroke-width:4px;} 
+</style>
+</defs>
+  <g id="Layer_2" data-name="Layer 2">
+  <g id="Layer_1-2" data-name="Layer 1">
+  <circle class="cls-1" cx="48" cy="48" r="46"/>
+</g></g>
+</svg> -->
+
       <div id="display_users"></div>
 
       <button @click=${this.addUser}>add user</button>
