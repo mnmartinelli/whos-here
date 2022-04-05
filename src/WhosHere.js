@@ -9,6 +9,8 @@ export class WhosHere extends LitElement {
     return {
       title: { type: String },
       users: { type: Array },
+      //db test stuff below
+      endpoint: { type: String },
     };
   }
 
@@ -16,6 +18,8 @@ export class WhosHere extends LitElement {
     super();
     this.title = 'Hey there';
     this.users = [];
+    //db test stuff below
+    this.endpoint = '/api/addNewUser';
   }
 
   updated(changedProperties) {
@@ -64,6 +68,12 @@ export class WhosHere extends LitElement {
       display.append(user);
     });
   }
+
+  // testDB() {
+  //   let currentTime = Date.now();
+
+  //   const testDB = await fetch(`${this.endpoint}?username=mike2?last_accessed=${currentTime}?colors=blue?custom_hash=1abcdefg?keep_or_delete=1`).then(res => res.json());
+  // }
 
   static get styles() {
     return css`
@@ -117,6 +127,7 @@ export class WhosHere extends LitElement {
       <div id="display_users"></div>
 
       <button @click=${this.addUser}>add user</button>
+      <!--<button class="dbtestBtn" @click=${this.testDB}>Post new user</button>-->
     `;
   }
 }
