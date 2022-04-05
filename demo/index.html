@@ -4,14 +4,74 @@
   <meta charset="utf-8">
   <style>
     body {
-      background: white;
+      background: #fafafa;
+    }
+    whos-here {
+      display: block;
+      position: absolute;
+      right: 0;
+    }
+    whos-here#wh1 {
+      top: 0;
+    }
+    whos-here#wh2 {
+      bottom: 0;
+    }
+    button {
+      font-size: 20px;
+      display: block;
+      padding: 4px;
+      margin: 8px;
     }
   </style>
 </head>
 <body>
+
   <script type="module">
-    import '../src/WhosHere.js';
+    import './src/WhosHere.js';
   </script>
-  <whos-here></whos-here>
+
+<whos-here id="wh1"></whos-here>
+<whos-here id="wh2"></whos-here>
+<h1>Demo operations</h1>
+  <button id="add1">add user to top list</button>
+  <button id="add2">add user to bottom list</button>
+  <h2>My awesome article that I am writing actively</h2>
+  <p contenteditable="">
+    Don't you love this article!? It's the best article.
+    Now don't get on my case, I know, I haven't written anything in awhile.
+    And when I do write, it's not really logical, but at least I got the 4pts
+    on the assignment. So this is for class and I was told to write two paragraphs.
+  </p>
+  <p contenteditable="">
+    This is what an additional paragraph looks like (LOL). So here we're going to
+    talk today about Docker. Docker is a word that I hadn't heard before, but you can
+    <a href="https://lmgtfy.app/?q=docker" target="_blank">Google it and it comes up with results</a>.
+    Well, I guess I need to run, see you next assignment where I phone it in completely!
+  </p>
+
+  <script>
+    // @feedback
+    // this little rewrite to your demo makes it possible to see what
+    // it's like when we visualize it where it would be within an app of some kind
+    // also this sample text is not making fun of any of you, it's more or less what
+    // someone turned in one semester thinking that I don't read articles.
+    // This demo now shows 2 possible positions for the whos-here widget and also
+    // will force you to be mindful of what would happen if there are multiple instances
+    // on a page or that you'll need some variable set somewhere for identifying 
+    // which URL the 'whos-here' widget is for. This way it can relate the data
+    // appropriately.
+
+    // yes, i am this lazy
+    function dqs(sel){ return document.querySelector(sel);}
+    // click handler for btn1
+    dqs("#add1").addEventListener("click", (e) => {
+      dqs("#wh1").addUser();
+    });
+    // click handler for btn2
+    dqs("#add2").addEventListener("click", (e) => {
+      dqs("#wh2").addUser();
+    });
+  </script>
 </body>
 </html>

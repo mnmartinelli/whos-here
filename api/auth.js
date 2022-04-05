@@ -1,3 +1,5 @@
+// @feedback I'd collaborate w/ the comment team to see how they are handling auth
+// and if you are both thinking of it in similar ways
 require('dotenv').config();
 const express = require('express')
 const app = express()
