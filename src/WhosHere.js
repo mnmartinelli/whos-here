@@ -92,23 +92,23 @@ export class WhosHere extends LitElement {
   }
 
   //test function for the add new user endpoint with db
-  testAddNewUser() {
-    let currentTime = Date.now();
+  // testAddNewUser() {
+  //   let currentTime = Date.now();
 
-    const testRequest = await fetch(`${this.newUserEndpoint}?username=mike2?last_accessed=${currentTime}?colors=blue?custom_hash=1abcdefg?keep_or_delete=1`).then(res => res.json());
-  }
+  //   const testRequest = await fetch(`${this.newUserEndpoint}?username=mike2?last_accessed=${currentTime}?colors=blue?custom_hash=1abcdefg?keep_or_delete=1`).then(res => res.json());
+  // }
 
   //test function for the update username endpoint with db
-  testUpdateUsername() {
-    //get username the user used to have before updating
-    //would have to make this 'get' fire when the user selects their name for editing
-    let oldUserName = '';
+  // testUpdateUsername() {
+  //   //get username the user used to have before updating
+  //   //would have to make this 'get' fire when the user selects their name for editing
+  //   let oldUserName = '';
 
-    //get new username entered by user
-    let newUsername = '';
+  //   //get new username entered by user
+  //   let newUsername = '';
 
-    const testRequest = await fetch(`${this.updateUsernameEndpoint}?oldUsername=mike1?newUsername=mike2`).then(res => res.json());
-  }
+  //   const testRequest = await fetch(`${this.updateUsernameEndpoint}?oldUsername=mike1?newUsername=mike2`).then(res => res.json());
+  // }
 
   static get styles() {
     return css`
