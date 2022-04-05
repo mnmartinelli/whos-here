@@ -187,8 +187,6 @@ export class WhosHere extends LitElement {
 
       <div id="display_users"></div>
 
-      <button @click=${this.addUser}>add user</button>
-
       <div class="testDBBtns">
         <!--<button class="dbtestBtn" @click=${this.testAddNewUser}>Post new user</button>-->
         <!--<button class="dbtestBtn" @click=${this.testUpdateUsername}>Post new user</button>-->

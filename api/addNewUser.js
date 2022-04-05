@@ -1,3 +1,7 @@
+// @feedback
+// aside from being in express, this looks like a simple way of interacting w/ your database
+// just check on if you actually need all these fields vs being able to generate them
+// off of the hash. I'd also be curious the difference in structure between username and custom_hash
 require('dotenv').config();
 const express = require('express')
 const app = express()
