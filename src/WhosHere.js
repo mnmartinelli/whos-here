@@ -11,8 +11,10 @@ export class WhosHere extends LitElement {
       title: { type: String },
       users: { type: Array },
       //db test stuff below
+      authEndpoint: { type: String },
+      auth: { type: Object },
       newUserEndpoint: { type: String },
-      updateUsernameEndpoint: { type: String },
+      newTimestampEndpoint: { type: String },
     };
   }
 
@@ -21,8 +23,9 @@ export class WhosHere extends LitElement {
     this.title = 'Hey there';
     this.users = [];
     //db test stuff below
-    this.newUserEndpoint = '/api/addNewUser';
-    this.updateUsernameEndpoint = '/api/updateUsername';
+    this.authEndpoint = '/api/auth.js';
+    this.newUserEndpoint = '/api/addNewUser.js';
+    this.newTimestampEndpoint = '/api/changeTimestamp.js';
   }
 
   updated(changedProperties) {
@@ -91,24 +94,34 @@ export class WhosHere extends LitElement {
     });
   }
 
-  //test function for the add new user endpoint with db
-  // testAddNewUser() {
-  //   let currentTime = Date.now();
+  async authTest() {
+    const auth = await fetch(`${this.authEndpoint}`).then(res => res.json());
+    console.log(auth);
+  }
 
-  //   const testRequest = await fetch(`${this.newUserEndpoint}?username=mike2?last_accessed=${currentTime}?colors=blue?custom_hash=1abcdefg?keep_or_delete=1`).then(res => res.json());
-  // }
+  // test function for the add new user endpoint with db
+  async testAddNewUser() {
+    let currentTime = Date.now();
 
-  //test function for the update username endpoint with db
-  // testUpdateUsername() {
-  //   //get username the user used to have before updating
-  //   //would have to make this 'get' fire when the user selects their name for editing
-  //   let oldUserName = '';
+    const testRequest = await fetch(`${this.newUserEndpoint}?last_accessed=${currentTime}?custom_hash=1abcdefg`).then(res => res.json());
+    console.log(testRequest);
+  }
 
-  //   //get new username entered by user
-  //   let newUsername = '';
 
-  //   const testRequest = await fetch(`${this.updateUsernameEndpoint}?oldUsername=mike1?newUsername=mike2`).then(res => res.json());
-  // }
+  // test function for the new timestamp endpoint with db
+  async testNewTimestampEndpoint() {
+    let userID = 0;
+    let oldTimestamp = '';
+
+    const getTimestamp = await fetch(`${this.authEndpoint}`).then(res => res.json()).then(json => oldTimestamp = json[userID].last_accessed);
+
+    let newTimestamp = Date.now();
+
+    const testRequest = await fetch(`${this.newTimestampEndpoint}?oldTimestamp=${oldTimestamp}?newTimestamp=${newTimestamp}`).then(res => res.json());
+    console.log(testRequest);
+  }
+
+
 
   static get styles() {
     return css`
@@ -188,8 +201,9 @@ export class WhosHere extends LitElement {
       <div id="display_users"></div>
 
       <div class="testDBBtns">
-        <!--<button class="dbtestBtn" @click=${this.testAddNewUser}>Post new user</button>-->
-        <!--<button class="dbtestBtn" @click=${this.testUpdateUsername}>Post new user</button>-->
+        <button class="dbtestBtn" @click=${this.authTest}>Auth Test</button>
+        <button class="dbtestBtn" @click=${this.testAddNewUser}>Post new user</button>
+        <button class="dbtestBtn" @click=${this.testNewTimestampEndpoint}>Change Timestamp</button>
       </div>
     `;
   }
