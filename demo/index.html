@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <style>
     body {
-      background: #fafafa;
+      background: #ffffff;
     }
     whos-here {
       display: block;
@@ -24,16 +24,20 @@
       margin: 8px;
     }
   </style>
+
+<script type="module">
+  import '../src/WhosHere.js';
+</script>
+
 </head>
 <body>
 
-  <script type="module">
-    import './src/WhosHere.js';
-  </script>
 
-<whos-here id="wh1"></whos-here>
-<whos-here id="wh2"></whos-here>
-<h1>Demo operations</h1>
+
+<whos-here></whos-here>
+<!-- <whos-here id="wh1"></whos-here>
+<whos-here id="wh2"></whos-here> -->
+<!-- <h1>Demo operations</h1>
   <button id="add1">add user to top list</button>
   <button id="add2">add user to bottom list</button>
   <h2>My awesome article that I am writing actively</h2>
@@ -72,6 +76,6 @@
     dqs("#add2").addEventListener("click", (e) => {
       dqs("#wh2").addUser();
     });
-  </script>
+  </script> -->
 </body>
 </html>

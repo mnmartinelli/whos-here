@@ -8,9 +8,18 @@ export class WhosHere extends LitElement {
 
   static get properties() {
     return {
+
       title: { type: String },
+
+      ring_color: { type: String },
+
+      userName: { type: String },
+      timePassed: { type: Number},
+
+      userObj: { type: Object },
+
       users: { type: Array },
-      //db test stuff below
+      //dnpmb test stuff below
       newUserEndpoint: { type: String },
       updateUsernameEndpoint: { type: String },
     };
@@ -19,77 +28,106 @@ export class WhosHere extends LitElement {
   constructor() {
     super();
     this.title = 'Hey there';
+    this.activiteTime(); 
+
+    //later make random usernames
+    this.userName = 'xiaojie'
+    this.lastAccessed = new Date();
+    this.timePassed = 0;
+    
+    this.userObj = {username: `${this.userName}`, lastTime: `${this.timePassed}`};
+   
+    //Later, we will get users from database to fill array.
     this.users = [];
+
+    this.users.push(this.userObj);
+
+    this.userObj2 = {username: 'xxx', lastTime: `5`};
+    this.userObj3 = {username:'sss', lastTime: `5`};
+    this.users.push(this.userObj2);
+    this.users.push(this.userObj3);
+
     //db test stuff below
     this.newUserEndpoint = '/api/addNewUser';
     this.updateUsernameEndpoint = '/api/updateUsername';
   }
 
-  updated(changedProperties) {
+
+  update(changedProperties) {
+    console.log("update")
     changedProperties.forEach((oldValue, propName) => {
-      if (propName === 'users' && this[propName]) {
-        const evt = new CustomEvent('users-changed', {
-          // send the event up in the HTML document
-          bubbles: true,
-          // move up out of custom tags (that have a shadowRoot) and regular HTML tags
-          composed: true,
-          // other developers / code is allowed to tell this event to STOP going up in the DOM
-          cancelable: true,
+      if (propName === 'userName' && this[propName]) {
+        console.log("assignNew")
+        Object.assign(this.userObj, { username: this.userName});
+        super.update(changedProperties);
+        
+      } else if(propName === 'timePassed' && this[propName]){
+        
+        
 
-          detail: {
-            value: this.users,
-          },
-        });
-
-        this.dispatchEvent(evt);
       }
     });
   }
 
-  addUser() {
-    let display = this.shadowRoot.querySelector('#display_users');
-    display.innerHTML = '';
+  activiteTime() {
+    console.log("activeTime")
+    var time;
+    let interval
 
-    const base = document.createElement('div');
-    console.log(base);
-    base.className = 'base';
+    //https://hackthestuff.com/article/how-to-check-if-user-is-active-or-inactive-in-webpage-using-javascript-or-jquery
+    // Will fire when mouse is active.
+    window.onmousemove = active; 
 
-    const tooltip = document.createElement('span');
-    tooltip.className = 'tooltip';
-    tooltip.innerHTML = 'info';
-    base.appendChild(tooltip);
+    function active() {
 
-    const rpgChar = document.createElement('rpg-character');
-    rpgChar.className = 'rpg';
-    const style = document.createElement('style');
-    rpgChar.appendChild(style);
-    base.appendChild(rpgChar);
+        clearTimeout(time);
 
-    const background = document.createElement('img');
-    background.setAttribute('src', '/images/white-background.svg');
-    background.className = 'backing';
-    base.appendChild(background);
+        // If inactive for more than 30 seconds (test: 5 secconds)
+        time = setTimeout(timer, 1000 * 5); //5 sec
+        
+    }
 
-    const ring = document.createElement('div');
-    ring.className = 'ring-color';
-    const colors = ['#ff0000', '#00ff00', '#0000ff'];
-    const randomColor = colors[Math.floor(Math.random() * colors.length)];
-    ring.style.border = `5px solid${randomColor}`;
+    function timer() {
+      console.log("inactive first 5 sec")
+          
+      // Update lastAccessed to current time when user becomes inactive
+      // Used for time tracking purpose
+      this.lastAccessed = new Date();
 
-    base.appendChild(ring);
+      // Will keep updating timePassed every 5 minutes (test: 5 seconds)
+     interval = setInterval(function(){
 
-    const container = document.createElement('slot');
-    container.className = 'container';
-    container.appendChild(base);
+      console.log("5 sec interval start")
+      
+        // Update timePassed => update will fire
+        this.timePassed = new Date() - this.lastAccessed
+        console.log(this.timePassed)
 
-    this.users.push(container);
+        // if time inactive is greater than 1 hour (test: 30 seconds), then user is deleted from database
+        if (this.timePassed > 1000 * 30){
+          
+          //Delete user from database
+          alert("User is inactive.");
+          clearInterval(interval)
 
-    // Adds each user from users array to display div.
-    this.users.forEach(user => {
-      display = this.shadowRoot.querySelector('#display_users');
-      display.append(user);
-    });
-  }
+        } 
+
+      }, 1000 * 5);
+    
+      window.addEventListener("mousemove", function () {
+        //Sets timePassed to 0 and fires update because user is active
+        this.timePassed = 0;
+        console.log(this.timePassed)
+      });
+    
+    }
+      
+    
+
+};
+
+// run the function
+
 
   //test function for the add new user endpoint with db
   // testAddNewUser() {
@@ -110,21 +148,19 @@ export class WhosHere extends LitElement {
   //   const testRequest = await fetch(`${this.updateUsernameEndpoint}?oldUsername=mike1?newUsername=mike2`).then(res => res.json());
   // }
 
-  static get styles() {
-    return css`
-      .container {
-        width: 20%;
-        height: 20%;
-      }
-      .container .base {
+  newUserName (){
+    this.userName = this.shadowRoot.querySelector("#inputUsername").value;
+    console.log("newUserName")
+  }
+
+  static styles = css`
+       .base {
         float: left;
         height: 142px;
         width: 113px;
-        border: 1px;
-        border-color: white;
         position: relative;
       }
-      .container .base .ring-color {
+       .base .ring-color {
         position: absolute;
         border-radius: 100%;
         height: 83px;
@@ -132,15 +168,16 @@ export class WhosHere extends LitElement {
         left: 10px;
         top: 0%;
         z-index: 2;
+        border: 5px solid;
       }
-      .container .base .backing {
+       .base .backing {
         z-index: 1;
       }
-      .container .base .rpg {
+       .base .rpg {
         position: absolute;
         z-index: -1;
       }
-      .container .base .tooltip {
+       .base .tooltip {
         visibility: hidden;
         width: 100px;
         background-color: gray;
@@ -155,8 +192,8 @@ export class WhosHere extends LitElement {
         margin-left: -2%;
       }
 
-      .container .base .tooltip::after {
-        content: ' ';
+       .base .tooltip::after {
+        content: '';
         position: absolute;
         bottom: 100%; /* At the bottom of the tooltip */
         left: 50%;
@@ -166,31 +203,62 @@ export class WhosHere extends LitElement {
         border-color: transparent transparent gray transparent;
       }
 
-      .container .base:hover .tooltip {
+       .base:hover .tooltip {
         visibility: visible;
       }
     `;
-  }
+  
+
 
   render() {
+
+    // ring_color = this.shadowRoot.querySelector(".pants")
+    // console.log(ring_color)
+
     return html`
-      <!-- <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 105 105">
-  <defs>
-  <style>.cls-1{fill:none;stroke:#000;stroke-miterlimit:10;stroke-width:4px;} 
-</style>
-</defs>
-  <g id="Layer_2" data-name="Layer 2">
-  <g id="Layer_1-2" data-name="Layer 1">
-  <circle class="cls-1" cx="48" cy="48" r="46"/>
-</g></g>
-</svg> -->
+      ${this.users.map(
+      
+      // can only edit their own usernames
+      user => this.userName == user.username ? html`
 
-      <div id="display_users"></div>
+      <div class="base">
+        <div class = "ring-color" style = "border-color: red;"></div>
+        <rpg-character class = "rpg" seed = ${user.username}></rpg-character>
 
-      <div class="testDBBtns">
+        <span class = "tooltip">
+          
+          <input id="inputUsername" type = "text" size = "8" value = '${user.username}'>
+          <button class="changeButton" @click=${this.newUserName}>change</button><br>
+          Last Accessed: ${user.lastTime}
+
+        </span>
+        <img src = "/images/white-background.svg" class = "backing">       
+      
+      </div>
+
+      ` : html`
+
+      <script type="text/javascript"> console.log('n') </script>
+      <div class="base">
+        <div class = "ring-color" style = "border-color: red;"></div>
+        <rpg-character class = "rpg" seed = ${user.username}></rpg-character>
+
+        <span class = "tooltip"> ${user.username}, Last Accessed: ${user.lastTime}
+          
+
+        </span>
+        <img src = "/images/white-background.svg" class = "backing">       
+      
+      </div>
+      
+      `
+      )}
+      
+
+      <!-- <div class="testDBBtns"> -->
         <!--<button class="dbtestBtn" @click=${this.testAddNewUser}>Post new user</button>-->
         <!--<button class="dbtestBtn" @click=${this.testUpdateUsername}>Post new user</button>-->
-      </div>
+      <!-- </div> -->
     `;
   }
 }
