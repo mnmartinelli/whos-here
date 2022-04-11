@@ -23,9 +23,9 @@ export class WhosHere extends LitElement {
     this.title = 'Hey there';
     this.users = [];
     //db test stuff below
-    this.authEndpoint = '/api/auth.js';
-    this.newUserEndpoint = '/api/addNewUser.js';
-    this.newTimestampEndpoint = '/api/changeTimestamp.js';
+    this.authEndpoint = '/api/auth';
+    this.newUserEndpoint = '/api/addNewUser';
+    this.newTimestampEndpoint = '/api/changeTimestamp';
   }
 
   updated(changedProperties) {
