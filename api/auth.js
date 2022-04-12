@@ -1,23 +1,15 @@
 // @feedback I'd collaborate w/ the comment team to see how they are handling auth
 // and if you are both thinking of it in similar ways
-require('dotenv').config();
-const express = require('express')
-const app = express()
-const port = process.env.PORT || 3000
 
-const mysql = require('mysql2')
-const connection = mysql.createConnection(process.env.DATABASE_URL);
+import { PSDB } from 'planetscale-node';
 
-connection.connect()
-
-app.get('/', (req, res) => {
-  connection.query('SELECT * FROM users', function (err, rows, fields) {
-    if (err) throw err
-
-    res.send(rows)
-  })
-})
-
-app.listen(port, () => {
-  console.log(`Example app listening at http://localhost:${port}`)
-})
+export default async function handler(req, res) {
+  const conn = new PSDB('main', {namedPlaceholders: true});
+  const [dbResult] = await conn.query('select * from users');
+  res.setHeader('Cache-Control', 'max-age=0, s-maxage=300');
+  res.setHeader("Access-Control-Allow-Credentials", "true");
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Methods", "GET,OPTIONS,PATCH,DELETE,POST,PUT");
+  res.setHeader("Access-Control-Allow-Headers", "X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version");
+  res.json(await dbResult);
+}
