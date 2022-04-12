@@ -24,8 +24,8 @@ export default {
     copy({
       targets: [
         {
-          src: 'node_modules/@lrnwebcomponents/rpg-character/lib/**',
-          dest: 'dist/node_modules/@lrnwebcomponents/rpg-character/lib',
+          src: 'node_modules/@lrnwebcomponents/rpg-character/lib',
+          dest: 'dist',
         },
       ],
     }),
