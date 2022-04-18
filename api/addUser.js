@@ -13,7 +13,10 @@ export default async function handler(req, res) {
         custom_hash: custom_hash,
     };
 
-    const [dbResult] = await conn.query(`INSERT INTO users(id, last_accessed, custom_hash) VALUES (:id :last_accessed, :custom_hash)`, user);
+    const [dbResult] = await conn.execute(
+        `INSERT INTO users(last_accessed, custom_hash) VALUES (:last_accessed, :custom_hash)`,
+        user
+    );
     res.setHeader('Cache-Control', 'max-age=0, s-maxage=300');
     res.setHeader("Access-Control-Allow-Credentials", "true");
     res.setHeader("Access-Control-Allow-Origin", "*");
