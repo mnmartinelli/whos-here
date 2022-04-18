@@ -14,11 +14,14 @@ export class WhosHere extends LitElement {
       ring_color: { type: String },
 
       userName: { type: String },
-      timePassed: { type: Number},
 
       userObj: { type: Object },
 
       users: { type: Array },
+
+      timestamp: { type: String},
+
+      
       //db test stuff below
       authEndpoint: { type: String },
       auth: { type: Object },
@@ -30,14 +33,13 @@ export class WhosHere extends LitElement {
   constructor() {
     super();
     this.title = 'Hey there';
-    this.activiteTime(); 
+
+    this.lastAccessed = new Date();
+    this.timestamp = 0;
 
     //later make random usernames
     this.userName = 'xiaojie'
-    this.lastAccessed = new Date();
-    this.timePassed = 0;
-    
-    this.userObj = {username: `${this.userName}`, lastTime: `${this.timePassed}`};
+    this.userObj = {username: `${this.userName}`, lastTime: `${this.timestamp}`};
    
     //Later, we will get users from database to fill array.
     this.users = [];
@@ -54,19 +56,41 @@ export class WhosHere extends LitElement {
     this.authEndpoint = '/api/auth';
     this.newUserEndpoint = '/api/addUser';
     this.newTimestampEndpoint = '/api/changeTimestamp';
+
+
+    this.activiteTime();
   }
+
+  //Hashes username (+ IP address?) into a color for ring color
+  //https://stackoverflow.com/questions/3426404/create-a-hexadecimal-colour-based-on-a-string-with-javascript
+  hashCode(str) { 
+    var hash = 0;
+    for (var i = 0; i < str.length; i++) {
+       hash = str.charCodeAt(i) + ((hash << 5) - hash);
+    }
+    var c = (hash & 0x00FFFFFF)
+    .toString(16)
+    .toUpperCase();
+
+  return "00000".substring(0, 6 - c.length) + c;
+  } 
 
 
   update(changedProperties) {
-    console.log("update")
+    console.log(changedProperties)
+    console.log(this.timestamp)
     changedProperties.forEach((oldValue, propName) => {
       if (propName === 'userName' && this[propName]) {
         console.log("assignNew")
         Object.assign(this.userObj, { username: this.userName});
         super.update(changedProperties);
         
-      } else if(propName === 'timePassed' && this[propName]){
+      } else if(propName === 'timestamp' && this[propName]){
         
+        Object.assign(this.userObj, { lastTime: this.timestamp});
+        super.update(changedProperties);
+
+        this.activiteTime();
         
 
       }
@@ -74,61 +98,57 @@ export class WhosHere extends LitElement {
   }
 
   activiteTime() {
-    console.log("activeTime")
-    var time;
-    let interval
 
-    //https://hackthestuff.com/article/how-to-check-if-user-is-active-or-inactive-in-webpage-using-javascript-or-jquery
-    // Will fire when mouse is active.
-    window.onmousemove = active; 
+      //Keep scope in setTimeout: https://snippets.aktagon.com/snippets/396-how-to-keep-the-scope-when-calling-settimeout-setinterval-in-javascript
+      var self = this;
 
-    function active() {
+      // Status will be true once mouse movement is detected
+      this.status = false;
 
-        clearTimeout(time);
+      // Will check for mouse mouvement within the 5 minutes (test: 5 sec)
+      setTimeout(function() { self.updateStat() }, 5 * 1000)
 
-        // If inactive for more than 30 seconds (test: 5 secconds)
-        time = setTimeout(timer, 1000 * 5); //5 sec
+      // Immediately deletes mouse event listener when mouse movement is detected
+      window.addEventListener("mousemove", active)
+
+      function active() {
+
+          self.status = true;
+          window.removeEventListener("mousemove", active)
+
+      }
         
     }
-
-    function timer() {
-      console.log("inactive first 5 sec")
-          
-      // Update lastAccessed to current time when user becomes inactive
-      // Used for time tracking purpose
-      this.lastAccessed = new Date();
-
-      // Will keep updating timePassed every 5 minutes (test: 5 seconds)
-     interval = setInterval(function(){
-
-      console.log("5 sec interval start")
       
-        // Update timePassed => update will fire
-        this.timePassed = new Date() - this.lastAccessed
-        console.log(this.timePassed)
 
-        // if time inactive is greater than 1 hour (test: 30 seconds), then user is deleted from database
-        if (this.timePassed > 1000 * 30){
-          
-          //Delete user from database
-          alert("User is inactive.");
-          clearInterval(interval)
+  updateStat(){
 
-        } 
+    if(this.status){
 
-      }, 1000 * 5);
-    
-      window.addEventListener("mousemove", function () {
-        //Sets timePassed to 0 and fires update because user is active
-        this.timePassed = 0;
-        console.log(this.timePassed)
-      });
-    
+      // LastAccessed time will be updated to database as well
+      this.lastAccessed = new Date;
+
+      // Starting over timestamp cannot equal 0 or else update won't work
+      this.timestamp = 5;
+
+      console.log("Active, start over timestamp:  " + this.timestamp)
+
+      // If status is false, timestamp is still less than 30 minutes (test: 20 sec)
+    } else if(this.timestamp < 20 * 1000){
+
+      // Get lastAccessed from database, update new timestamp, and update is triggered
+      this.timestamp = new Date() - this.lastAccessed;
+      console.log("Not active, timestamp:  " + this.timestamp)
+
     }
-      
-    
+    else {
 
-};
+      console.log("deleted from database")
+
+    }
+
+}
+    
 
 // run the function
 
@@ -224,12 +244,7 @@ export class WhosHere extends LitElement {
       }
     `;
   
-
-
   render() {
-
-    // ring_color = this.shadowRoot.querySelector(".pants")
-    // console.log(ring_color)
 
     return html`
       ${this.users.map(
@@ -238,7 +253,7 @@ export class WhosHere extends LitElement {
       user => this.userName == user.username ? html`
 
       <div class="base">
-        <div class = "ring-color" style = "border-color: red;"></div>
+        <div class = "ring-color" style = "border-color: #${this.hashCode(user.username)};"></div>
         <rpg-character class = "rpg" seed = ${user.username}></rpg-character>
 
         <span class = "tooltip">
