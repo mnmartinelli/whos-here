@@ -155,7 +155,7 @@ export class WhosHere extends LitElement {
 
   async authTest() {
     const auth = await fetch(`${this.authEndpoint}`).then(res => res.json());
-    this.auth = auth?.id;
+    this.auth = auth.id;
     console.log(this.auth);
   }
 
