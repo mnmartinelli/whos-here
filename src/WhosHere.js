@@ -155,13 +155,13 @@ export class WhosHere extends LitElement {
 
   async authTest() {
     const auth = await fetch(`${this.authEndpoint}`).then(res => res.json());
-    this.auth = auth?.id;
+    this.auth = auth.id;
     console.log(this.auth);
   }
 
   // test function for the add new user endpoint with db
   async testAddNewUser() {
-    let currentTime = Date.now();
+    let currentTime = new Date().toISOString().slice(0, 19).replace('T', ' ');
     let customHash = 'anonymous animal';
 
     const testRequest = await fetch(`${this.newUserEndpoint}?last_accessed=${currentTime}&custom_hash=${customHash}`).then(res => res.json());
