@@ -155,7 +155,7 @@ export class WhosHere extends LitElement {
 
   async authTest() {
     const auth = await fetch(`${this.authEndpoint}`).then(res => res.json());
-    this.auth = auth.id;
+    this.auth = auth;
     console.log(this.auth);
   }
 
@@ -165,8 +165,8 @@ export class WhosHere extends LitElement {
     let customHash = 'anonymous animal';
 
     const testRequest = await fetch(`${this.newUserEndpoint}?last_accessed=${currentTime}&custom_hash=${customHash}`).then(res => res.json());
-    this.testRequest = testRequest?.testRequest[0];
-    console.log(testRequest);
+    this.testRequest = testRequest;
+    console.log(this.testRequest);
   }
 
 
@@ -175,14 +175,13 @@ export class WhosHere extends LitElement {
     let userID = 0;
     let oldTimestamp = '';
 
-    const getTimestamp = await fetch(`${this.authEndpoint}`).then(res => res.json()).then(json => oldTimestamp = json[userID].last_accessed);
+    const getTimestamp = await fetch(`${this.authEndpoint}`).then(res => res.json());
 
     let newTimestamp = Date.now();
 
     const testRequest = await fetch(`${this.newTimestampEndpoint}?oldTimestamp=${oldTimestamp}?newTimestamp=${newTimestamp}`).then(res => res.json());
-    this.testRequest = testRequest?.testRequest[0];
-    console.log(testRequest);
-    console.log(testRequest);
+    this.testRequest = testRequest;
+    console.log(this.testRequest);
   }
 
 
