@@ -165,6 +165,7 @@ export class WhosHere extends LitElement {
     let customHash = 'anonymous animal';
 
     const testRequest = await fetch(`${this.newUserEndpoint}?last_accessed=${currentTime}?custom_hash=${customHash}`).then(res => res.json());
+    this.testRequest = testRequest?.testRequest[0];
     console.log(testRequest);
   }
 
@@ -179,6 +180,7 @@ export class WhosHere extends LitElement {
     let newTimestamp = Date.now();
 
     const testRequest = await fetch(`${this.newTimestampEndpoint}?oldTimestamp=${oldTimestamp}?newTimestamp=${newTimestamp}`).then(res => res.json());
+    this.testRequest = testRequest?.testRequest[0];
     console.log(testRequest);
   }
 
