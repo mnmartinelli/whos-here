@@ -182,6 +182,7 @@ export class WhosHere extends LitElement {
     const testRequest = await fetch(`${this.newTimestampEndpoint}?oldTimestamp=${oldTimestamp}?newTimestamp=${newTimestamp}`).then(res => res.json());
     this.testRequest = testRequest?.testRequest[0];
     console.log(testRequest);
+    console.log(testRequest);
   }
 
 
