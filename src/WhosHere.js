@@ -24,7 +24,7 @@ export class WhosHere extends LitElement {
       
       //db test stuff below
       authEndpoint: { type: String },
-      auth: { type: Object },
+      auth: { type: Array },
       newUserEndpoint: { type: String },
       newTimestampEndpoint: { type: String },
     };
@@ -157,6 +157,7 @@ export class WhosHere extends LitElement {
     const auth = await fetch(`${this.authEndpoint}`).then(res => res.json());
     this.auth = auth;
     console.log(this.auth);
+    
   }
 
   // test function for the add new user endpoint with db
