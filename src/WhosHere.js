@@ -21,12 +21,13 @@ export class WhosHere extends LitElement {
 
       timestamp: { type: String},
 
-      
+      customHash: { type: String, reflect: true },
       //db test stuff below
       authEndpoint: { type: String },
       auth: { type: Array },
       newUserEndpoint: { type: String },
       newTimestampEndpoint: { type: String },
+
     };
   }
 
@@ -94,8 +95,36 @@ export class WhosHere extends LitElement {
         
 
       }
+
+      if (propName === 'customHash' && this[propName]) {
+        console.log('customhash prop changed');
+
+        //get all db data
+        const auth = await fetch(`${this.authEndpoint}`).then(res => res.json());
+        let result1 = auth;
+        result1.forEach(node => {
+          console.log(`ID: ${node.id} Last Accessed: ${node.last_accessed} Custom Hash: ${node.custom_hash}`);
+        });
+        
+
+        //run function to add new user
+        let currentTime = new Date().toISOString().slice(0, 19).replace('T', ' ');
+
+        const request = await fetch(`${this.newUserEndpoint}?last_accessed=${currentTime}&custom_hash=${this.customHash}`).then(res => res.json());
+        let result2 = request;
+        console.log(`Added new user. ID: ${result2.id} Last Accessed: ${result2.last_accessed} Custom Hash: ${result2.custom_hash}`);
+      }
     });
   }
+
+  // async testAddNewUser() {
+  //   let currentTime = new Date().toISOString().slice(0, 19).replace('T', ' ');
+  //   let customHash = 'anonymous animal';
+
+  //   const testRequest = await fetch(`${this.newUserEndpoint}?last_accessed=${currentTime}&custom_hash=${customHash}`).then(res => res.json());
+  //   this.testRequest = testRequest;
+  //   console.log(this.testRequest);
+  // }
 
   activiteTime() {
 
@@ -153,22 +182,22 @@ export class WhosHere extends LitElement {
 // run the function
 
 
-  async authTest() {
-    const auth = await fetch(`${this.authEndpoint}`).then(res => res.json());
-    this.auth = auth;
-    console.log(this.auth);
+  // async authTest() {
+  //   const auth = await fetch(`${this.authEndpoint}`).then(res => res.json());
+  //   this.auth = auth;
+  //   console.log(this.auth);
     
-  }
+  // }
 
   // test function for the add new user endpoint with db
-  async testAddNewUser() {
-    let currentTime = new Date().toISOString().slice(0, 19).replace('T', ' ');
-    let customHash = 'anonymous animal';
+  // async testAddNewUser() {
+  //   let currentTime = new Date().toISOString().slice(0, 19).replace('T', ' ');
+  //   let customHash = 'anonymous animal';
 
-    const testRequest = await fetch(`${this.newUserEndpoint}?last_accessed=${currentTime}&custom_hash=${customHash}`).then(res => res.json());
-    this.testRequest = testRequest;
-    console.log(this.testRequest);
-  }
+  //   const testRequest = await fetch(`${this.newUserEndpoint}?last_accessed=${currentTime}&custom_hash=${customHash}`).then(res => res.json());
+  //   this.testRequest = testRequest;
+  //   console.log(this.testRequest);
+  // }
 
 
   // test function for the new timestamp endpoint with db
