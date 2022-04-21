@@ -58,6 +58,7 @@ export class WhosHere extends LitElement {
     this.newUserEndpoint = '/api/addUser';
     this.newTimestampEndpoint = '/api/changeTimestamp';
 
+    this.customHash = "12345678";
 
     this.activiteTime();
   }
@@ -326,9 +327,9 @@ export class WhosHere extends LitElement {
       <div id="display_users"></div>
 
       <div class="testDBBtns">
-        <button class="dbtestBtn" @click=${this.authTest}>Auth Test</button>
-        <button class="dbtestBtn" @click=${this.testAddNewUser}>Post new user</button>
-        <button class="dbtestBtn" @click=${this.testNewTimestampEndpoint}>Change Timestamp</button>
+        <button class="dbtestBtn" @click=${this.getAllData}>Auth Test</button>
+        <button class="dbtestBtn" @click=${this.addNewUser}>Post new user</button>
+        <!--<button class="dbtestBtn" @click=${this.testNewTimestampEndpoint}>Change Timestamp</button>-->
       </div>
     `;
   }
