@@ -143,18 +143,17 @@ export class WhosHere extends LitElement {
   }
 
   async deleteUser() {
-    let testHash = 'hello';
+    let testHash = "hello";
 
-    const testRequest = await fetch(`${this.deleteUserEndpoint}?custom_hash=${testHash}` 
+    const testRequest = await fetch(`${this.deleteUserEndpoint}?custom_hash=${testHash}`).then(res => res.json());
     // {
     //   method: 'DELETE',
     // }
-    )
-    .then(res => res.json()) 
-    .then(res => console.log(res))
+    
+    // .then(res => console.log(res))
 
-    this.testRequest = testRequest;
-    console.log(this.testRequest);
+    let result3 = testRequest;
+    console.log(result3);
   }
 
   activiteTime() {
