@@ -153,7 +153,7 @@ export class WhosHere extends LitElement {
     result1.forEach(node => {
         if(testHash === node.custom_hash){
             deleted_hash = node.custom_hash;
-
+            console.log(`got all data... deleted hash: ${deleted_hash}`);
         }
         //console.log(`ID: ${node.id} Last Accessed: ${node.last_accessed} Custom Hash: ${node.custom_hash}`);
     });
