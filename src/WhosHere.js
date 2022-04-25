@@ -143,9 +143,22 @@ export class WhosHere extends LitElement {
   }
 
   async deleteUser() {
+
     let testHash = "hello";
 
-    const testRequest = await fetch(`${this.deleteUserEndpoint}?custom_hash=${testHash}`).then(res => res.json());
+    let deleted_hash;
+
+    const auth = await fetch(`${this.authEndpoint}`).then(res => res.json());
+    let result1 = auth;
+    result1.forEach(node => {
+        if(testHash === node.custom_hash){
+            deleted_hash = user.custom_hash;
+
+        }
+        //console.log(`ID: ${node.id} Last Accessed: ${node.last_accessed} Custom Hash: ${node.custom_hash}`);
+    });
+
+    const testRequest = await fetch(`${this.deleteUserEndpoint}?custom_hash=${deleted_hash}`).then(res => res.json());
     // {
     //   method: 'DELETE',
     // }
