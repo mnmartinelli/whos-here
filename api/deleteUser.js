@@ -9,9 +9,11 @@ export default async function handler(req, res) {
         custom_hash: custom_hash,
     };
 
+    let authEndpoint = "../auth";
+
     let deleted_user;
 
-    const auth = await fetch(`${this.authEndpoint}`).then(res => res.json());
+    const auth = await fetch(`${authEndpoint}`).then(res => res.json());
     let result1 = auth;
     result1.forEach(node => {
         if(user.custom_hash == node.custom_hash){
