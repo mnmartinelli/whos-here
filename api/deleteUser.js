@@ -6,25 +6,25 @@ export default async function handler(req, res) {
     const conn = new PSDB('main', {namedPlaceholders: true});
     const { custom_hash } = req.query;
     var user = {
-        custom_hash: custom_hash,
+        deleted_hash: custom_hash,
     };
 
-    let authEndpoint = "../auth";
+    // let authEndpoint = "../auth";
 
-    let deleted_user;
+    // let deleted_user;
 
-    const auth = await fetch(`${authEndpoint}`).then(res => res.json());
-    let result1 = auth;
-    result1.forEach(node => {
-        if(user.custom_hash == node.custom_hash){
-            deleted_user = user.custom_hash;
+    // const auth = await fetch(`${authEndpoint}`).then(res => res.json());
+    // let result1 = auth;
+    // result1.forEach(node => {
+    //     if(user.custom_hash == node.custom_hash){
+    //         deleted_user = user.custom_hash;
 
-        }
-        console.log(`ID: ${node.id} Last Accessed: ${node.last_accessed} Custom Hash: ${node.custom_hash}`);
-    });
+    //     }
+    //     console.log(`ID: ${node.id} Last Accessed: ${node.last_accessed} Custom Hash: ${node.custom_hash}`);
+    // });
 
     const [dbResult] = await conn.execute(
-        `DELETE FROM users WHERE custom_hash = ${deleted_user}`
+        `DELETE FROM users WHERE custom_hash = ${deleted_hash}`
     );
 
     res.setHeader('Cache-Control', 'max-age=0, s-maxage=300');
