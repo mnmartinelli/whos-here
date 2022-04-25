@@ -27,6 +27,7 @@ export class WhosHere extends LitElement {
       auth: { type: Array },
       newUserEndpoint: { type: String },
       newTimestampEndpoint: { type: String },
+      deleteUserEndpoint: { type: String },
 
     };
   }
@@ -58,6 +59,7 @@ export class WhosHere extends LitElement {
     this.newUserEndpoint = '/api/addUser';
     this.newTimestampEndpoint = '/api/changeTimestamp';
     this.getLastAccessed = '/api/lastAccessed';
+    this.deleteUserEndpoint = '/api/deleteUser';
 
     // this.customHash = ;
 
@@ -142,7 +144,7 @@ export class WhosHere extends LitElement {
 
   async deleteUser() {
 
-    const testRequest = await fetch(`${this.delete}?custom_hash=hello`, {
+    const testRequest = await fetch(`${this.deleteUserEndpoint}?custom_hash=hello`, {
       method: 'DELETE',
     })
     .then(res => res.json()) 
