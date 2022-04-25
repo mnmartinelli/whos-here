@@ -57,6 +57,7 @@ export class WhosHere extends LitElement {
     this.authEndpoint = '/api/auth';
     this.newUserEndpoint = '/api/addUser';
     this.newTimestampEndpoint = '/api/changeTimestamp';
+    this.getLastAccessed = '/api/lastAccessed';
 
     this.customHash = "12345678";
 
@@ -131,6 +132,24 @@ export class WhosHere extends LitElement {
     const request = await fetch(`${this.newUserEndpoint}?last_accessed=${currentTime}&custom_hash=${this.customHash}`).then(res => res.json());
     let result2 = request;
     console.log(`Added new user. ID: ${result2.id} Last Accessed: ${result2.last_accessed} Custom Hash: ${result2.custom_hash}`);
+  }
+
+  async getLastAccessedTime() {
+    const time = await fetch(`${this.getLastAccessed}?custom_hash=${this.customHash}`).then(res => res.json());
+    let result = time;
+    console.log(result)
+  }
+
+  async deleteUser() {
+
+    const testRequest = await fetch(`${this.delete}?custom_hash=hello`, {
+      method: 'DELETE',
+    })
+    .then(res => res.json()) 
+    .then(res => console.log(res))
+
+    this.testRequest = testRequest;
+    console.log(this.testRequest);
   }
 
   activiteTime() {
@@ -327,6 +346,7 @@ export class WhosHere extends LitElement {
       <div id="display_users"></div>
 
       <div class="testDBBtns">
+      <button class="dbtestBtn" @click=${this.deleteUser}>delete user</button>
         <button class="dbtestBtn" @click=${this.getAllData}>Auth Test</button>
         <button class="dbtestBtn" @click=${this.addNewUser}>Post new user</button>
         <!--<button class="dbtestBtn" @click=${this.testNewTimestampEndpoint}>Change Timestamp</button>-->
