@@ -58,7 +58,7 @@ export class WhosHere extends LitElement {
     this.newUserEndpoint = '/api/addUser';
     this.newTimestampEndpoint = '/api/changeTimestamp';
 
-    this.customHash = "12345678";
+    // this.customHash = ;
 
     this.activiteTime();
   }
