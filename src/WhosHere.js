@@ -64,6 +64,8 @@ export class WhosHere extends LitElement {
     // this.customHash = ;
 
     this.activiteTime();
+    this.seed = null;
+    this.birthday = null; //birthday timestamp
   }
 
   //Hashes username (+ IP address?) into a color for ring color
@@ -80,10 +82,33 @@ export class WhosHere extends LitElement {
   return "00000".substring(0, 6 - c.length) + c;
   } 
 
+  seedEncode(str1, str2) {
+    let ip = str1;
+    let birthday = str2.substring(14,19);
+    let lasttwo = str1.substring(10,12) + str2.substring(17,19);
+    let seed = BigInt(1);
+
+    for (let i=0; i< ip.length; i++) {
+      //console.log(basicip.charCodeAt(i));
+      for (let j=0; j< birthday.length; j++) {
+        if (i<64) {
+          seed = BigInt(seed) * BigInt(ip.charCodeAt(i));
+        }
+        if (j<34) {
+          seed = BigInt(seed) + BigInt(birthday.charCodeAt(j));
+        }
+      }
+      seed = BigInt(seed)-BigInt(lasttwo);
+
+    }
+    seed = BigInt(seed).toString();
+    return seed.substring(str1.substring(11,12),32);
+  }
 
   update(changedProperties) {
     console.log(changedProperties)
-    console.log(this.timestamp)
+    //console.log(this.timestamp)
+    //this.seedEncode();
     changedProperties.forEach((oldValue, propName) => {
       if (propName === 'userName' && this[propName]) {
         console.log("assignNew")
@@ -123,9 +148,16 @@ export class WhosHere extends LitElement {
     if (super.firstUpdated) {
       super.firstUpdated(changedProperties);
     }
-
+    //add ip
     let currentTime = new Date().toISOString().slice(0, 19).replace('T', ' ');
-
+    if (this.birthday === null) {
+      this.birthday = currentTime;
+      console.log(this.birthday);
+    }
+    if (this.seed === null) {
+      this.seed = this.seedEncode("192.168.2.65", this.birthday);
+      console.log(this.seed);
+    }
     const request = await fetch(`${this.newUserEndpoint}?last_accessed=${currentTime}&custom_hash=${this.customHash}`).then(res => res.json());
     let result2 = request;
     console.log(`Added new user. ID: ${result2.id} Last Accessed: ${result2.last_accessed} Custom Hash: ${result2.custom_hash}`);
@@ -360,7 +392,7 @@ export class WhosHere extends LitElement {
       <script type="text/javascript"> console.log('n') </script>
       <div class="base">
         <div class = "ring-color" style = "border-color: red;"></div>
-        <rpg-character class = "rpg" seed = ${user.username}></rpg-character>
+        <rpg-character class = "rpg" seed = ${this.seed}></rpg-character>
 
         <span class = "tooltip"> ${user.username}, Last Accessed: ${user.lastTime}
           
