@@ -184,9 +184,23 @@ export class WhosHere extends LitElement {
   }
 
   async getAllData() {
+
+    let usersArea = document.querySelector('#display_users');
+
     const auth = await fetch(`${this.authEndpoint}`).then(res => res.json());
     let result1 = auth;
     result1.forEach(node => {
+      usersArea.innerHTML += `<div class="base">
+         <div class = "ring-color" style = "border-color: red;"></div>
+         <rpg-character class = "rpg" seed = ${node.custom_hash}></rpg-character>
+
+         <span class = "tooltip"> ${node.custom_hash}, Last Accessed: ${node.last_accessed}
+          
+
+         </span>
+         <img src = "/images/white-background.svg" class = "backing">       
+      
+       </div>`
       console.log(`ID: ${node.id} Last Accessed: ${node.last_accessed} Custom Hash: ${node.custom_hash}`);
     });
 
@@ -331,23 +345,23 @@ export class WhosHere extends LitElement {
   }
 
   refresh() {
-
-    let allUsers = this.getAllData();
+    this.getAllData();
+    //let allUsers = this.getAllData();
     let usersArea = document.querySelector('#display_users');
 
-    allUsers.forEach(user => {
-      usersArea.innerHTML += `<div class="base">
-         <div class = "ring-color" style = "border-color: red;"></div>
-         <rpg-character class = "rpg" seed = ${user.customHash}></rpg-character>
+    // allUsers.forEach(user => {
+    //   usersArea.innerHTML += `<div class="base">
+    //      <div class = "ring-color" style = "border-color: red;"></div>
+    //      <rpg-character class = "rpg" seed = ${user.customHash}></rpg-character>
 
-         <span class = "tooltip"> ${user.customHash}, Last Accessed: ${user.last_accessed}
+    //      <span class = "tooltip"> ${user.customHash}, Last Accessed: ${user.last_accessed}
           
 
-         </span>
-         <img src = "/images/white-background.svg" class = "backing">       
+    //      </span>
+    //      <img src = "/images/white-background.svg" class = "backing">       
       
-       </div>`
-    });
+    //    </div>`
+    // });
   }
 
   static styles = css`
