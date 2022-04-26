@@ -29,6 +29,8 @@ export class WhosHere extends LitElement {
       newTimestampEndpoint: { type: String },
       deleteUserEndpoint: { type: String },
 
+      // usersArray: { type: Array, reflect: true },
+
     };
   }
 
@@ -134,7 +136,10 @@ export class WhosHere extends LitElement {
         // result1.forEach(node => {
         //   console.log(`ID: ${node.id} Last Accessed: ${node.last_accessed} Custom Hash: ${node.custom_hash}`);
         // });
-        this.getAllData();
+        this.getAllData().forEach(node => {
+          this.users.append(node);
+        });
+
         this.addNewUser();
         
 
@@ -170,6 +175,8 @@ export class WhosHere extends LitElement {
     result1.forEach(node => {
       console.log(`ID: ${node.id} Last Accessed: ${node.last_accessed} Custom Hash: ${node.custom_hash}`);
     });
+
+    return result1;
   }
 
   //test function for the add new user endpoint with db
