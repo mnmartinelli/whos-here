@@ -138,20 +138,21 @@ export class WhosHere extends LitElement {
         // });
 
         let newUser = "";
+        this.refresh(this.getAllData());
 
-        this.getAllData().forEach(node => {
-          newUser = `<div class="base">
-          <div class = "ring-color" style = "border-color: red;"></div>
-          <rpg-character class = "rpg" seed = ${node.customHash}></rpg-character>
+        // this.getAllData().forEach(node => {
+        //   newUser = `<div class="base">
+        //   <div class = "ring-color" style = "border-color: red;"></div>
+        //   <rpg-character class = "rpg" seed = ${node.customHash}></rpg-character>
   
-          <span class = "tooltip"> ${node.customHash}, Last Accessed: ${node.last_accessed}
+        //   <span class = "tooltip"> ${node.customHash}, Last Accessed: ${node.last_accessed}
             
   
-          </span>
-          <img src = "/images/white-background.svg" class = "backing">       
+        //   </span>
+        //   <img src = "/images/white-background.svg" class = "backing">       
         
-        </div>`
-        });
+        // </div>`
+        // });
 
         this.addNewUser();
         
@@ -329,6 +330,24 @@ export class WhosHere extends LitElement {
     console.log("newUserName")
   }
 
+  refresh(allUsers) {
+    let usersArea = document.querySelector('#display_users');
+
+    allUsers.forEach(user => {
+      usersArea.innerHTML += `<div class="base">
+         <div class = "ring-color" style = "border-color: red;"></div>
+         <rpg-character class = "rpg" seed = ${user.customHash}></rpg-character>
+
+         <span class = "tooltip"> ${user.customHash}, Last Accessed: ${user.last_accessed}
+          
+
+         </span>
+         <img src = "/images/white-background.svg" class = "backing">       
+      
+       </div>`
+    });
+  }
+
   static styles = css`
        .base {
         float: left;
@@ -428,6 +447,7 @@ export class WhosHere extends LitElement {
       <div id="display_users"></div>
 
       <div class="testDBBtns">
+      <button class="refreshBtn" @click=${this.refresh}>refresh</button>
       <button class="dbtestBtn" @click=${this.deleteUser}>delete user</button>
         <button class="dbtestBtn" @click=${this.getAllData}>Auth Test</button>
         <button class="dbtestBtn" @click=${this.addNewUser}>Post new user</button>
