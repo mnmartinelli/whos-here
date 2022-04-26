@@ -24,7 +24,7 @@ export default async function handler(req, res) {
     // });
 
     const [dbResult] = await conn.execute(
-        `DELETE FROM users WHERE custom_hash = ${user.deleted_hash}`
+        `DELETE FROM users WHERE custom_hash = custom_hash`
     );
 
     // res.setHeader('Cache-Control', 'max-age=0, s-maxage=300');
