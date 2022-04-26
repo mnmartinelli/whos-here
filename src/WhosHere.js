@@ -119,11 +119,11 @@ export class WhosHere extends LitElement {
     });
   }
 
-  firstUpdated(changedProperties) {
+  async firstUpdated(changedProperties) {
     if (super.firstUpdated) {
       super.firstUpdated(changedProperties);
     }
-    
+
     let currentTime = new Date().toISOString().slice(0, 19).replace('T', ' ');
 
     const request = await fetch(`${this.newUserEndpoint}?last_accessed=${currentTime}&custom_hash=${this.customHash}`).then(res => res.json());
