@@ -138,7 +138,7 @@ export class WhosHere extends LitElement {
         // });
 
         let newUser = "";
-        this.refresh(this.getAllData());
+        this.getAllData();
 
         // this.getAllData().forEach(node => {
         //   newUser = `<div class="base">
@@ -330,7 +330,9 @@ export class WhosHere extends LitElement {
     console.log("newUserName")
   }
 
-  refresh(allUsers) {
+  refresh() {
+
+    let allUsers = this.getAllData();
     let usersArea = document.querySelector('#display_users');
 
     allUsers.forEach(user => {
