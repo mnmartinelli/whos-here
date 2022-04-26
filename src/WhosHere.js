@@ -119,6 +119,19 @@ export class WhosHere extends LitElement {
     });
   }
 
+  firstUpdated(changedProperties) {
+    if (super.firstUpdated) {
+      super.firstUpdated(changedProperties);
+    }
+    
+    let currentTime = new Date().toISOString().slice(0, 19).replace('T', ' ');
+
+    const request = await fetch(`${this.newUserEndpoint}?last_accessed=${currentTime}&custom_hash=${this.customHash}`).then(res => res.json());
+    let result2 = request;
+    console.log(`Added new user. ID: ${result2.id} Last Accessed: ${result2.last_accessed} Custom Hash: ${result2.custom_hash}`);
+
+  }
+
   async getAllData() {
     const auth = await fetch(`${this.authEndpoint}`).then(res => res.json());
     let result1 = auth;
