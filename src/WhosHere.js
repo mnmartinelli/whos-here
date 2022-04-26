@@ -129,15 +129,28 @@ export class WhosHere extends LitElement {
 
       if (propName === 'customHash' && this[propName]) {
         console.log('customhash prop changed');
-
+        let displayUsers = document.querySelector('#display_users');
         //get all db data
         // const auth = await fetch(`${this.authEndpoint}`).then(res => res.json());
         // let result1 = auth;
         // result1.forEach(node => {
         //   console.log(`ID: ${node.id} Last Accessed: ${node.last_accessed} Custom Hash: ${node.custom_hash}`);
         // });
+
+        let newUser = "";
+
         this.getAllData().forEach(node => {
-          this.users.append(node);
+          newUser = `<div class="base">
+          <div class = "ring-color" style = "border-color: red;"></div>
+          <rpg-character class = "rpg" seed = ${node.customHash}></rpg-character>
+  
+          <span class = "tooltip"> ${node.customHash}, Last Accessed: ${node.last_accessed}
+            
+  
+          </span>
+          <img src = "/images/white-background.svg" class = "backing">       
+        
+        </div>`
         });
 
         this.addNewUser();
@@ -163,7 +176,7 @@ export class WhosHere extends LitElement {
       this.seed = this.seedEncode("192.168.2.65", this.birthday);
       console.log(this.seed);
     }
-    const request = await fetch(`${this.newUserEndpoint}?last_accessed=${currentTime}&custom_hash=${this.customHash}`).then(res => res.json());
+    const request = await fetch(`${this.newUserEndpoint}?last_accessed=${currentTime}&custom_hash=${this.seed}`).then(res => res.json());
     let result2 = request;
     console.log(`Added new user. ID: ${result2.id} Last Accessed: ${result2.last_accessed} Custom Hash: ${result2.custom_hash}`);
 
@@ -183,7 +196,7 @@ export class WhosHere extends LitElement {
   async addNewUser() {
     let currentTime = new Date().toISOString().slice(0, 19).replace('T', ' ');
 
-    const request = await fetch(`${this.newUserEndpoint}?last_accessed=${currentTime}&custom_hash=${this.customHash}`).then(res => res.json());
+    const request = await fetch(`${this.newUserEndpoint}?last_accessed=${currentTime}&custom_hash=${this.seed}`).then(res => res.json());
     let result2 = request;
     console.log(`Added new user. ID: ${result2.id} Last Accessed: ${result2.last_accessed} Custom Hash: ${result2.custom_hash}`);
   }
