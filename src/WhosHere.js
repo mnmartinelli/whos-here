@@ -13,6 +13,8 @@ export class WhosHere extends LitElement {
 
       ring_color: { type: String },
 
+      userName: { type: String },
+
       userObj: { type: Object },
 
       users: { type: Array },
@@ -37,9 +39,9 @@ export class WhosHere extends LitElement {
     this.lastAccessed = new Date();
     this.timestamp = 0;
 
-    //custom hash = username
-    this.customHash = 'hello'
-    this.userObj = {username: `${this.customHash}`, lastTime: this.timestamp/60000};
+    //later make random usernames
+    this.userName = 'xiaojie'
+    this.userObj = {username: `${this.userName}`, lastTime: `${this.timestamp}`};
    
     //Later, we will get users from database to fill array.
     this.users = [];
@@ -55,10 +57,11 @@ export class WhosHere extends LitElement {
     this.auth = {};
     this.authEndpoint = '/api/auth';
     this.newUserEndpoint = '/api/addUser';
-    this.updateUsername = '/api/changeUsername';
-    this.updateLastAccessed = '/api/lastAccessed';
+    this.newTimestampEndpoint = '/api/changeTimestamp';
+    this.getLastAccessed = '/api/lastAccessed';
     this.deleteUserEndpoint = '/api/deleteUser';
 
+    // this.customHash = ;
 
     this.activiteTime();
     this.seed = null;
@@ -107,40 +110,37 @@ export class WhosHere extends LitElement {
     //console.log(this.timestamp)
     //this.seedEncode();
     changedProperties.forEach((oldValue, propName) => {
-      if (propName === 'customHash' && this[propName]) {
-        this.getAllData();
+      if (propName === 'userName' && this[propName]) {
+        console.log("assignNew")
+        Object.assign(this.userObj, { username: this.userName});
         super.update(changedProperties);
         
       } else if(propName === 'timestamp' && this[propName]){
         
-        Object.assign(this.userObj, { lastTime: this.timestamp/60000});
+        Object.assign(this.userObj, { lastTime: this.timestamp});
         super.update(changedProperties);
 
-        //This will get newest version of timestamps 
-        this.getAllData();
-
-        //Initates timer again
         this.activiteTime();
         
 
       }
 
-      // if (propName === 'customHash' && this[propName]) {
-      //   console.log('customhash prop changed');
+      if (propName === 'customHash' && this[propName]) {
+        console.log('customhash prop changed');
 
-      //   //get all db data
-      //   // const auth = await fetch(`${this.authEndpoint}`).then(res => res.json());
-      //   // let result1 = auth;
-      //   // result1.forEach(node => {
-      //   //   console.log(`ID: ${node.id} Last Accessed: ${node.last_accessed} Custom Hash: ${node.custom_hash}`);
-      //   // });
-      //   this.getAllData();
-      //   this.addNewUser();
+        //get all db data
+        // const auth = await fetch(`${this.authEndpoint}`).then(res => res.json());
+        // let result1 = auth;
+        // result1.forEach(node => {
+        //   console.log(`ID: ${node.id} Last Accessed: ${node.last_accessed} Custom Hash: ${node.custom_hash}`);
+        // });
+        this.getAllData();
+        this.addNewUser();
         
 
-      //   //run function to add new user
+        //run function to add new user
         
-      // }
+      }
     });
   }
 
@@ -165,33 +165,26 @@ export class WhosHere extends LitElement {
   }
 
   async getAllData() {
-
-    //Reset users data
-    this.users = [];
-
     const auth = await fetch(`${this.authEndpoint}`).then(res => res.json());
     let result1 = auth;
     result1.forEach(node => {
       console.log(`ID: ${node.id} Last Accessed: ${node.last_accessed} Custom Hash: ${node.custom_hash}`);
-
-      //60000ms = 1 min
-      let minute_timestamp = (new Date() - node.last_accessed) / 60000;
-      this.users.push({username: node.custom_hash, lastTime: minute_timestamp});
-
     });
-
-    
-
   }
 
   //test function for the add new user endpoint with db
   async addNewUser() {
-    // let currentTime = new Date().toISOString().slice(0, 19).replace('T', ' ');
-    // let currentTime = new Date();
+    let currentTime = new Date().toISOString().slice(0, 19).replace('T', ' ');
 
-    const request = await fetch(`${this.newUserEndpoint}?last_accessed=${this.lastAccessed}&custom_hash=${this.customHash}`).then(res => res.json());
+    const request = await fetch(`${this.newUserEndpoint}?last_accessed=${currentTime}&custom_hash=${this.customHash}`).then(res => res.json());
     let result2 = request;
     console.log(`Added new user. ID: ${result2.id} Last Accessed: ${result2.last_accessed} Custom Hash: ${result2.custom_hash}`);
+  }
+
+  async getLastAccessedTime() {
+    const time = await fetch(`${this.getLastAccessed}?custom_hash=${this.customHash}`).then(res => res.json());
+    let result = time;
+    console.log(result)
   }
 
   async deleteUser() {
@@ -211,71 +204,14 @@ export class WhosHere extends LitElement {
     });
 
     const testRequest = await fetch(`${this.deleteUserEndpoint}?custom_hash=${deleted_hash}`).then(res => res.json());
-
+    // {
+    //   method: 'DELETE',
+    // }
+    
+    // .then(res => console.log(res))
 
     let result3 = testRequest;
     console.log(result3);
-  }
-
-  async updateLast_Accessed() {
-
-    let testHash = "hello";
-
-    let changed_hash;
-
-    const auth = await fetch(`${this.authEndpoint}`).then(res => res.json());
-    let result1 = auth;
-    result1.forEach(node => {
-        if(testHash === node.custom_hash){
-          changed_hash = node.custom_hash;
-            console.log(`change this: ${changed_hash}`);
-        }
-    });
-
-    const testRequest = await fetch(`${this.updateLastAccessed}?last_accessed=${this.lastAccessed}&custom_hash=${changed_hash}`).then(res => res.json());
-
-
-    let result4 = testRequest;
-    console.log(result4);
-  }
-
-  
-
-  newUserName (){
-
-    // //old hash
-    // this.userName;
-
-    // //new hash
-    // this.newUserName = this.shadowRoot.querySelector("#inputUsername").value;
-    
-    //old hash
-    let testHash = "hello";
-
-    // new hash
-    let testNewHash = "hello1";
-
-    let changed_hash;
-
-    const auth = await fetch(`${this.authEndpoint}`).then(res => res.json());
-    let result1 = auth;
-    result1.forEach(node => {
-        if(testHash === node.custom_hash){
-          changed_hash = node.custom_hash;
-            console.log(`change this: ${changed_hash}`);
-        }
-    });
-
-    const testRequest = await fetch(`${this.updateUsername}?custom_hash=${changed_hash}&new_hash=${testNewHash}`).then(res => res.json());
-    
-    //Once username is changed in database, this will fire update to update users list
-    this.customHash = testNewHash;
-
-
-    let result4 = testRequest;
-    console.log(result4);
-    
-
   }
 
   activiteTime() {
@@ -286,7 +222,7 @@ export class WhosHere extends LitElement {
       // Status will be true once mouse movement is detected
       this.status = false;
 
-      // Will check for mouse mouvement within the 5 minutes  = 300sec (test: 5 sec)
+      // Will check for mouse mouvement within the 5 minutes (test: 5 sec)
       setTimeout(function() { self.updateStat() }, 5 * 1000)
 
       // Immediately deletes mouse event listener when mouse movement is detected
@@ -308,17 +244,16 @@ export class WhosHere extends LitElement {
 
       // LastAccessed time will be updated to database as well
       this.lastAccessed = new Date;
-      this.updateLast_Accessed();
 
       // Starting over timestamp cannot equal 0 or else update won't work
       this.timestamp = 5;
 
       console.log("Active, start over timestamp:  " + this.timestamp)
 
-      // If status is false, timestamp is still less than 30 minutes = 1800sec (test: 20 sec)
+      // If status is false, timestamp is still less than 30 minutes (test: 20 sec)
     } else if(this.timestamp < 20 * 1000){
 
-      // Use lastAccessed time to update new timestamp, and update is triggered
+      // Get lastAccessed from database, update new timestamp, and update is triggered
       this.timestamp = new Date() - this.lastAccessed;
       console.log("Not active, timestamp:  " + this.timestamp)
 
@@ -326,48 +261,73 @@ export class WhosHere extends LitElement {
     else {
 
       console.log("deleted from database")
-      this.deleteUser();
 
     }
 
 }
+    
+
+// run the function
+
+
+  // async authTest() {
+  //   const auth = await fetch(`${this.authEndpoint}`).then(res => res.json());
+  //   this.auth = auth;
+  //   console.log(this.auth);
+    
+  // }
+
+  // test function for the add new user endpoint with db
+  // async testAddNewUser() {
+  //   let currentTime = new Date().toISOString().slice(0, 19).replace('T', ' ');
+  //   let customHash = 'anonymous animal';
+
+  //   const testRequest = await fetch(`${this.newUserEndpoint}?last_accessed=${currentTime}&custom_hash=${customHash}`).then(res => res.json());
+  //   this.testRequest = testRequest;
+  //   console.log(this.testRequest);
+  // }
+
+
+  // test function for the new timestamp endpoint with db
+  async testNewTimestampEndpoint() {
+    let userID = 0;
+    let oldTimestamp = '';
+
+    const getTimestamp = await fetch(`${this.authEndpoint}`).then(res => res.json());
+
+    let newTimestamp = Date.now();
+
+    const testRequest = await fetch(`${this.newTimestampEndpoint}?oldTimestamp=${oldTimestamp}?newTimestamp=${newTimestamp}`).then(res => res.json());
+    this.testRequest = testRequest;
+    console.log(this.testRequest);
+  }
 
 
 
-  changeRPGSize(){
-
-    this.currentSize = this.shadowRoot.querySelector("rpg-character").getAttribute("height")
-   
-    this.currentSize = this.currentSize === "100" ? "70" : "100";
-  
-    this.shadowRoot.querySelector("rpg-character").setAttribute("height", this.currentSize)
-   
+  newUserName (){
+    this.userName = this.shadowRoot.querySelector("#inputUsername").value;
+    console.log("newUserName")
   }
 
   static styles = css`
        .base {
         float: left;
-        height: 113px;
-        width: 100px;
-        margin-top: 10px;
+        height: 142px;
+        width: 113px;
         position: relative;
       }
        .base .ring-color {
         position: absolute;
         border-radius: 100%;
-        height: 60px;
-        width: 60px;
-        left: 21px;
+        height: 83px;
+        width: 83px;
+        left: 10px;
         top: 0%;
         z-index: 2;
         border: 5px solid;
       }
        .base .backing {
-        width: auto;  
-        max-height: 105px;  
-        left: 17px;
         z-index: 1;
-        position: relative;
       }
        .base .rpg {
         position: absolute;
@@ -410,17 +370,17 @@ export class WhosHere extends LitElement {
       ${this.users.map(
       
       // can only edit their own usernames
-      user => this.customHash == user.username ? html`
+      user => this.userName == user.username ? html`
 
       <div class="base">
-        <div class = "ring-color"  @click=${this.changeRPGSize} style = "border-color: #${this.hashCode(user.username)};"></div>
-        <rpg-character height = "100" class = "rpg" seed = ${user.username}></rpg-character>
+        <div class = "ring-color" style = "border-color: #${this.hashCode(user.username)};"></div>
+        <rpg-character class = "rpg" seed = ${user.username}></rpg-character>
 
         <span class = "tooltip">
           
           <input id="inputUsername" type = "text" size = "8" value = '${user.username}'>
           <button class="changeButton" @click=${this.newUserName}>change</button><br>
-          Last Accessed: ${user.lastTime} minute(s) ago
+          Last Accessed: ${user.lastTime}
 
         </span>
         <img src = "/images/white-background.svg" class = "backing">       
@@ -432,10 +392,9 @@ export class WhosHere extends LitElement {
       <script type="text/javascript"> console.log('n') </script>
       <div class="base">
         <div class = "ring-color" style = "border-color: red;"></div>
+        <rpg-character class = "rpg" seed = ${this.seed}></rpg-character>
 
-        <rpg-character height = "100" class = "rpg" seed = ${user.username}></rpg-character>
-        <rpg-character class = "rpg" seed = ${this.seed}></rpg-character> //might have issue
-        <span class = "tooltip"> ${user.username}, Last Accessed: ${user.lastTime} minute(s) ago
+        <span class = "tooltip"> ${user.username}, Last Accessed: ${user.lastTime}
           
 
         </span>
@@ -449,8 +408,6 @@ export class WhosHere extends LitElement {
       <div id="display_users"></div>
 
       <div class="testDBBtns">
-      <button class="dbtestBtn" @click=${this.newUserName}>change user</button>
-      <button class="dbtestBtn" @click=${this.updateLast_Accessed}>delete user</button>
       <button class="dbtestBtn" @click=${this.deleteUser}>delete user</button>
         <button class="dbtestBtn" @click=${this.getAllData}>Auth Test</button>
         <button class="dbtestBtn" @click=${this.addNewUser}>Post new user</button>
