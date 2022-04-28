@@ -11,6 +11,8 @@ export class WhosHere extends LitElement {
 
       userName: { type: String },
 
+      userName: { type: String },
+
       userObj: { type: Object },
 
       users: { type: Array },
@@ -25,6 +27,8 @@ export class WhosHere extends LitElement {
       updateHash: { type: String },
       updateLastAccessed: { type: String },
       deleteUserEndpoint: { type: String },
+
+      // usersArray: { type: Array, reflect: true },
 
     };
   }
@@ -99,39 +103,55 @@ export class WhosHere extends LitElement {
     console.log(changedProperties)
 
     changedProperties.forEach((oldValue, propName) => {
-
       if (propName === 'customHash' && this[propName]) {
         console.log(this.customHash)
         Object.assign(this.userObj, { username: this.customHash});
         super.update(changedProperties);
         
-      } else if(propName === 'timestamp' && this[propName]){
-
-        this.activiteTime();
+      } 
+      
+     if(propName === 'timestamp' && this[propName]){
+        
         Object.assign(this.userObj, { lastTime: this.timestamp});
         super.update(changedProperties);
 
-        
-        
+        this.activiteTime();     
 
       }
 
-      // if (propName === 'customHash' && this[propName]) {
-      //   console.log('customhash prop changed');
+      if (propName === 'customHash' && this[propName]) {
+        console.log('customhash prop changed');
+        let displayUsers = document.querySelector('#display_users');
+        //get all db data
+        // const auth = await fetch(`${this.authEndpoint}`).then(res => res.json());
+        // let result1 = auth;
+        // result1.forEach(node => {
+        //   console.log(`ID: ${node.id} Last Accessed: ${node.last_accessed} Custom Hash: ${node.custom_hash}`);
+        // });
 
-      //   //get all db data
-      //   // const auth = await fetch(`${this.authEndpoint}`).then(res => res.json());
-      //   // let result1 = auth;
-      //   // result1.forEach(node => {
-      //   //   console.log(`ID: ${node.id} Last Accessed: ${node.last_accessed} Custom Hash: ${node.custom_hash}`);
-      //   // });
-      //   this.getAllData();
-      //   this.addNewUser();
+        let newUser = "";
+        this.getAllData();
+
+        // this.getAllData().forEach(node => {
+        //   newUser = `<div class="base">
+        //   <div class = "ring-color" style = "border-color: red;"></div>
+        //   <rpg-character class = "rpg" seed = ${node.customHash}></rpg-character>
+  
+        //   <span class = "tooltip"> ${node.customHash}, Last Accessed: ${node.last_accessed}
+            
+  
+        //   </span>
+        //   <img src = "/images/white-background.svg" class = "backing">       
+        
+        // </div>`
+        // });
+
+        this.addNewUser();
         
 
-      //   //run function to add new user
+        //run function to add new user
         
-      // }
+      }
     });
   }
 
@@ -158,14 +178,18 @@ export class WhosHere extends LitElement {
     // let result2 = request;
     // console.log(`Added new user. ID: ${result2.id} Last Accessed: ${result2.last_accessed} Custom Hash: ${result2.custom_hash}`);
 
+
   }
 
   async getAllData() {
+
     const auth = await fetch(`${this.authEndpoint}`).then(res => res.json());
     let result1 = auth;
     result1.forEach(node => {
       console.log(`ID: ${node.id} Last Accessed: ${node.last_accessed} Custom Hash: ${node.custom_hash}`);
     });
+
+    return result1;
   }
 
   //test function for the add new user endpoint with db
@@ -308,12 +332,12 @@ export class WhosHere extends LitElement {
     }
     else {
 
-      console.log("deleted from database: " + this.timestamp)
+      console.log("deleted from database")
 
     }
 
 }
-
+    
 // Will ensure we get different timestamp 
 // https://stackoverflow.com/questions/40056297/random-number-which-is-not-equal-to-the-previous-number
  randomTimestamp(prev){
@@ -329,7 +353,6 @@ export class WhosHere extends LitElement {
   
   return next;
 };
-  
 
 changeRPGSize(){
 
@@ -402,7 +425,7 @@ changeRPGSize(){
       ${this.users.map(
       
       // can only edit their own usernames
-      user => this.customHash == user.username ? html`
+      user => this.userName == user.username ? html`
 
       <div class="base">
         <div class = "ring-color" @click=${this.changeRPGSize}  style = "border-color: #${this.hashCode(user.username)};"></div>
