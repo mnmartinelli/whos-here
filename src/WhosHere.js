@@ -9,10 +9,6 @@ export class WhosHere extends LitElement {
   static get properties() {
     return {
 
-      userName: { type: String },
-
-      userName: { type: String },
-
       userObj: { type: Object },
 
       users: { type: Array },
@@ -40,7 +36,8 @@ export class WhosHere extends LitElement {
     this.users = [];
     this.userObj;
 
-    this.lastAccessed = new Date();
+    this.lastAccessedUnmodded = new Date();
+    this.lastAccessed = new Date().toISOString().slice(0, 19).replace('T', ' ');
 
     this.userObj2 = {username: 'xxx', lastTime: `5`};
     this.userObj3 = {username:'sss', lastTime: `5`};
@@ -51,7 +48,6 @@ export class WhosHere extends LitElement {
     this.auth = {};
     this.authEndpoint = '/api/auth';
     this.newUserEndpoint = '/api/addUser';
-    this.updateHash = '/api/changeHash';
     this.updateLastAccessed = '/api/lastAccessed';
     this.deleteUserEndpoint = '/api/deleteUser';
 
@@ -103,13 +99,6 @@ export class WhosHere extends LitElement {
     console.log(changedProperties)
 
     changedProperties.forEach((oldValue, propName) => {
-      if (propName === 'customHash' && this[propName]) {
-        console.log(this.customHash)
-        Object.assign(this.userObj, { username: this.customHash});
-        super.update(changedProperties);
-        
-      } 
-      
      if(propName === 'timestamp' && this[propName]){
         
         Object.assign(this.userObj, { lastTime: this.timestamp});
@@ -120,42 +109,19 @@ export class WhosHere extends LitElement {
       }
 
       if (propName === 'customHash' && this[propName]) {
-        console.log('customhash prop changed');
-        let displayUsers = document.querySelector('#display_users');
-        //get all db data
-        // const auth = await fetch(`${this.authEndpoint}`).then(res => res.json());
-        // let result1 = auth;
-        // result1.forEach(node => {
-        //   console.log(`ID: ${node.id} Last Accessed: ${node.last_accessed} Custom Hash: ${node.custom_hash}`);
-        // });
 
-        let newUser = "";
+        console.log(this.customHash)
+        super.update(changedProperties);
+
+        console.log('customhash prop changed');
+
         this.getAllData();
 
-        // this.getAllData().forEach(node => {
-        //   newUser = `<div class="base">
-        //   <div class = "ring-color" style = "border-color: red;"></div>
-        //   <rpg-character class = "rpg" seed = ${node.customHash}></rpg-character>
-  
-        //   <span class = "tooltip"> ${node.customHash}, Last Accessed: ${node.last_accessed}
-            
-  
-        //   </span>
-        //   <img src = "/images/white-background.svg" class = "backing">       
-        
-        // </div>`
-        // });
-
-        this.addNewUser();
-        
-
-        //run function to add new user
-        
       }
     });
   }
 
-  newUserActivities(){
+  async newUserActivities(){
     //add ip
     this.birthday = null;
 
@@ -166,23 +132,19 @@ export class WhosHere extends LitElement {
       console.log(this.birthday);
     }
     
-      this.customHash = this.seedEncode("192.168.2.65", this.birthday);  
+    this.customHash = this.seedEncode("192.168.2.65", this.birthday);  
 
-      this.timestamp = 1;
-      this.userObj = {username: `${this.customHash}`, lastTime: `${this.timestamp}`};
-      this.users.push(this.userObj);
-      
-      
+    this.timestamp = 1;
+    this.userObj = {username: `${this.customHash}`, lastTime: `${this.timestamp}`};
+    this.users.push(this.userObj);
     
-    // const request = await fetch(`${this.newUserEndpoint}?last_accessed=${currentTime}&custom_hash=${this.customHash}`).then(res => res.json());
-    // let result2 = request;
-    // console.log(`Added new user. ID: ${result2.id} Last Accessed: ${result2.last_accessed} Custom Hash: ${result2.custom_hash}`);
-
-
+  
+    const request = await fetch(`${this.newUserEndpoint}?last_accessed=${currentTime}&custom_hash=${this.customHash}`).then(res => res.json());
+    let result2 = request;
+    console.log(`Added new user. ID: ${result2.id} Last Accessed: ${result2.last_accessed} Custom Hash: ${result2.custom_hash}`);
   }
 
   async getAllData() {
-
     const auth = await fetch(`${this.authEndpoint}`).then(res => res.json());
     this.users = auth;
 
@@ -252,31 +214,31 @@ export class WhosHere extends LitElement {
     console.log(result4);
   }
   
-    hashChange (){
-      // let new_username = this.shadowRoot.querySelector("#inputUsername").value;
+    // hashChange (){
+    //   // let new_username = this.shadowRoot.querySelector("#inputUsername").value;
   
-      let testHash = "hello";
-  
-  
-      // Check if previous username is in database, if yes, new Date() can be used to change custome_hash 
-      // const auth = await fetch(`${this.authEndpoint}`).then(res => res.json());
-      // let result1 = auth;
-      // result1.forEach(node => {
-      //     if(testHash === node.custom_hash){
-      //       this.customHash = this.seedEncode("192.168.2.65", new Date().toISOString().slice(0, 19).replace('T', ' ')); 
-  
-          // Update custom hash in database as well
-          // const testRequest = await fetch(`${this.updateHash}?custom_hash=${changed_hash}&new_hash=${testNewHash}`).then(res => res.json());
-  
-      //         console.log(`change this: ${this.customHash}`);
-      //     }
-      // });
+    //   let testHash = "hello";
   
   
-      this.customHash = this.seedEncode("192.168.2.65", new Date().toISOString().slice(0, 19).replace('T', ' ')); 
-      console.log(`change this: ${this.customHash}`);
+    //   // Check if previous username is in database, if yes, new Date() can be used to change custome_hash 
+    //   // const auth = await fetch(`${this.authEndpoint}`).then(res => res.json());
+    //   // let result1 = auth;
+    //   // result1.forEach(node => {
+    //   //     if(testHash === node.custom_hash){
+    //   //       this.customHash = this.seedEncode("192.168.2.65", new Date().toISOString().slice(0, 19).replace('T', ' ')); 
   
-    }
+    //       // Update custom hash in database as well
+    //       // const testRequest = await fetch(`${this.updateHash}?custom_hash=${changed_hash}&new_hash=${testNewHash}`).then(res => res.json());
+  
+    //   //         console.log(`change this: ${this.customHash}`);
+    //   //     }
+    //   // });
+  
+  
+    //   this.customHash = this.seedEncode("192.168.2.65", new Date().toISOString().slice(0, 19).replace('T', ' ')); 
+    //   console.log(`change this: ${this.customHash}`);
+  
+    // }
 
   activiteTime() {
 
@@ -311,7 +273,7 @@ export class WhosHere extends LitElement {
       // LastAccessed time will be updated to database as well
       
       // Set new lastAccessed here to database.
-      this.lastAccessed = new Date();
+      this.lastAccessed = new Date().toISOString().slice(0, 19).replace('T', ' ');
 
       // Restarting timestamp twice in a row should not have the same timestamp or else, update won't fire.
       this.timestamp = this.randomTimestamp(this.timestamp);
@@ -322,7 +284,7 @@ export class WhosHere extends LitElement {
     } else if(this.timestamp < 20 * 1000){
 
       // Update new timestamp, and update is triggered
-      this.timestamp = new Date() - this.lastAccessed;
+      this.timestamp = (new Date() - this.lastAccessedUnmodded).toISOString().slice(0, 19).replace('T', ' ');
 
       console.log(this.status + ": " + this.timestamp)
 
@@ -417,12 +379,12 @@ changeRPGSize(){
     `;
   
   render() {
-
+    const backgroundImg = new URL('../images/white-background.svg', import.meta.url).href;
     return html`
       ${this.users.map(
       
       // can only edit their own usernames
-      user => this.userName == user.username ? html`
+      user => this.customHash == user.username ? html`
 
       <div class="base">
         <div class = "ring-color" @click=${this.changeRPGSize}  style = "border-color: #${this.hashCode(user.username)};"></div>
@@ -430,12 +392,12 @@ changeRPGSize(){
 
         <span class = "tooltip">
           
-          <input id="inputUsername" type = "text" size = "8" value = '${user.username}'>
+          <p id="inputUsername" size = "8">${user.username}</p>
           <button class="changeButton" @click=${this.hashChange}>change</button><br>
           Last Accessed: ${user.lastTime}
 
         </span>
-        <img src = "/images/white-background.svg" class = "backing">       
+        <img src = "${backgroundImg}" class = "backing">       
       
       </div>
 
