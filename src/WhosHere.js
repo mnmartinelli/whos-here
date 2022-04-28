@@ -184,12 +184,9 @@ export class WhosHere extends LitElement {
   async getAllData() {
 
     const auth = await fetch(`${this.authEndpoint}`).then(res => res.json());
-    let result1 = auth;
-    result1.forEach(node => {
-      console.log(`ID: ${node.id} Last Accessed: ${node.last_accessed} Custom Hash: ${node.custom_hash}`);
-    });
+    this.users = auth;
 
-    return result1;
+    return auth;
   }
 
   //test function for the add new user endpoint with db
