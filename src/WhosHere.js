@@ -384,6 +384,7 @@ changeRPGSize(){
   
   render() {
     const backgroundImg = new URL('../images/white-background.svg', import.meta.url).href;
+    this.getAllData();
     return html`
       ${this.users.map(
       
