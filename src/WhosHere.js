@@ -54,7 +54,6 @@ export class WhosHere extends LitElement {
 
     this.customHash;
     
-    this.newUserActivities();
 
 
   }
@@ -121,7 +120,10 @@ export class WhosHere extends LitElement {
     });
   }
 
-  async newUserActivities(){
+  async firstUpdated(changedProperties){
+    if (super.firstUpdated) {
+      super.firstUpdated(changedProperties);
+    }
     //add ip
     this.birthday = null;
 
