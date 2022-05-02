@@ -53,8 +53,8 @@ export class WhosHere extends LitElement {
     this.deleteUserEndpoint = '/api/deleteUser';
 
     this.customHash;
-    this.firstUpdated();
     
+    this.newUserActivities();
 
 
   }
@@ -121,10 +121,7 @@ export class WhosHere extends LitElement {
     });
   }
 
-  async firstUpdated(changedProperties){
-    if (super.firstUpdated) {
-      super.firstUpdated(changedProperties);
-    }
+  async newUserActivities(){
     //add ip
     this.birthday = null;
 
@@ -146,7 +143,6 @@ export class WhosHere extends LitElement {
     let result2 = request;
     console.log(`Added new user. ID: ${result2.id} Last Accessed: ${result2.last_accessed} Custom Hash: ${result2.custom_hash}`);
     this.getAllData();
-    console.log(this.users);
   }
 
   async getAllData() {
