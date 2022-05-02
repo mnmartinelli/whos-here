@@ -142,12 +142,16 @@ export class WhosHere extends LitElement {
     const request = await fetch(`${this.newUserEndpoint}?last_accessed=${currentTime}&custom_hash=${this.customHash}`).then(res => res.json());
     let result2 = request;
     console.log(`Added new user. ID: ${result2.id} Last Accessed: ${result2.last_accessed} Custom Hash: ${result2.custom_hash}`);
+    this.getAllData();
+    console.log(this.getAllData());
+    console.log(this.users);
   }
+
 
   async getAllData() {
     const auth = await fetch(`${this.authEndpoint}`).then(res => res.json());
     this.users = auth;
-
+    console.log(this.users);
     return auth;
   }
 
