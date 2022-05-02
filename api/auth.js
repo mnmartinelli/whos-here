@@ -5,7 +5,7 @@ import { PSDB } from 'planetscale-node';
 
 export default async function handler(req, res) {
   const conn = new PSDB('main');
-  const [dbResult] = await conn.query('select custom_hash, last_accessed lastac from users');
+  const [dbResult] = await conn.query('select custom_hash, last_accessed from users');
   // res.setHeader('Cache-Control', 'max-age=0, s-maxage=30');
   res.setHeader("Access-Control-Allow-Credentials", "true");
   res.setHeader("Access-Control-Allow-Origin", "*");
