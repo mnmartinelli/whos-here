@@ -126,7 +126,7 @@ export class WhosHere extends LitElement {
     this.birthday = null;
 
 
-    let currentTime = this.lastAccessed.toISOString().slice(0, 19).replace('T', ' ');
+    let currentTime = this.lastAccessed;
     if (this.birthday === null) {
       this.birthday = currentTime;
       console.log(this.birthday);
