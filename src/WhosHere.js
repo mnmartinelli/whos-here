@@ -79,7 +79,6 @@ export class WhosHere extends LitElement {
     let seed = BigInt(1);
 
     for (let i=0; i< ip.length; i++) {
-      //console.log(basicip.charCodeAt(i));
       for (let j=0; j< birthday.length; j++) {
         if (i<64) {
           seed = BigInt(seed) * BigInt(ip.charCodeAt(i));
@@ -143,15 +142,13 @@ export class WhosHere extends LitElement {
     let result2 = request;
     console.log(`Added new user. ID: ${result2.id} Last Accessed: ${result2.last_accessed} Custom Hash: ${result2.custom_hash}`);
     this.getAllData();
-    console.log(this.getAllData());
-    console.log(this.users);
   }
 
 
   async getAllData() {
     const auth = await fetch(`${this.authEndpoint}`).then(res => res.json());
     this.users = auth;
-    console.log(this.users);
+    console.log(`this.users 151: ${this.users}`);
     return auth;
   }
 
@@ -385,6 +382,8 @@ changeRPGSize(){
   render() {
     const backgroundImg = new URL('../images/white-background.svg', import.meta.url).href;
     this.getAllData();
+    console.log(`this.users 385 below: ${this.users}`);
+    console.log(this.users);
     return html`
       ${this.users.map(
       
