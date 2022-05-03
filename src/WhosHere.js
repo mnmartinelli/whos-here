@@ -118,9 +118,12 @@ export class WhosHere extends LitElement {
 
         let usersArea = this.shadowRoot.querySelector('#display_users');
 
+        // usersArea.innerHTML = '';
+
         
 
         this.getAllData().forEach(user => {
+          console.log(user);
           let newUserDiv = document.createElement('div');
 
           let div = document.createElement('div');
@@ -446,25 +449,7 @@ changeRPGSize(){
     console.log(`in render: ${this.users}`);
     return html`
 
-      ${this.users.map(
       
-      // can only edit their own usernames
-      user => html`
-
-      <script type="text/javascript"> console.log('n') </script>
-      <div class="base">
-        <div class = "ring-color" style = "border-color: #${this.hashCode(user.custom_hash)};"></div>
-        <rpg-character class = "rpg" seed = ${user.custom_hash}></rpg-character>
-
-        <span class = "tooltip"> ${user.custom_hash}, Last Accessed: ${user.last_accessed}
-          
-        </span>
-        <img src = "/images/white-background.svg" class = "backing">       
-      
-      </div>
-      
-      `
-      )}
 
       <div id="display_users">
         <p>users area</p>
