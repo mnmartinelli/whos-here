@@ -131,6 +131,8 @@ export class WhosHere extends LitElement {
 
           let usersArea = this.shadowRoot.querySelector('#display_users');
 
+          const backgroundImg = new URL('../images/white-background.svg', import.meta.url).href;
+
           usersArea.innerHTML = '';
 
           //updates user area after 1 second to give this.users time to retrieve data
@@ -157,7 +159,7 @@ export class WhosHere extends LitElement {
             span.appendChild(spanContent);
 
             let img = document.createElement('img');
-            img.setAttribute('src', '/images/white-background.svg');
+            img.setAttribute('src', `${backgroundImg}`);
             img.setAttribute('class', 'backing');
 
             newUserDiv.appendChild(div);
@@ -168,7 +170,7 @@ export class WhosHere extends LitElement {
             usersArea.appendChild(newUserDiv);
           })
 
-          , 1000);
+          , 500);
 
           this.checkForUsers  = false;
         }
@@ -407,7 +409,6 @@ export class WhosHere extends LitElement {
     `;
   
   render() {
-    const backgroundImg = new URL('../images/white-background.svg', import.meta.url).href;
     return html`
       <div id="display_users"></div>
 
