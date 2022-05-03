@@ -26,6 +26,7 @@ export class WhosHere extends LitElement {
       updateLastAccessed: { type: String },
       deleteUserEndpoint: { type: String },
       deleteAllUsersEndpoint: { type: String },
+      ip: { type: String, reflect: true },
 
       // usersArray: { type: Array, reflect: true },
 
@@ -44,10 +45,6 @@ export class WhosHere extends LitElement {
     this.lastAccessed = new Date().toISOString().slice(0, 19).replace('T', ' ');
 
     this.checkForUsers = false;
-    // this.userObj2 = {username: 'xxx', lastTime: `5`};
-    // this.userObj3 = {username:'sss', lastTime: `5`};
-    // this.users.push(this.userObj2);
-    // this.users.push(this.userObj3);
 
     //db test stuff below
     this.authEndpoint = '/api/auth';
@@ -56,8 +53,9 @@ export class WhosHere extends LitElement {
     this.deleteUserEndpoint = '/api/deleteUser';
     this.deleteAllUsersEndpoint = '/api/deleteAllUsers';
 
-    // this.customHash;
-    
+    //ip test
+    this.ip = null;
+
     this.newUserActivities();
 
 
@@ -111,7 +109,6 @@ export class WhosHere extends LitElement {
         this.activiteTime();     
 
       }
-
       if (propName === 'customHash' && this[propName]) {
 
         console.log(this.customHash)
@@ -183,6 +180,12 @@ export class WhosHere extends LitElement {
   //sets custom hash and timestamp
   async newUserActivities(){
     //add ip
+    if (this.ip === null) {
+      this.ip = this.getIP();
+      setTimeout(()=> 
+      console.log(this.ip)
+      ,1000);
+    }
     this.birthday = null;
 
 
@@ -191,11 +194,20 @@ export class WhosHere extends LitElement {
       this.birthday = currentTime;
       console.log(this.birthday);
     }
-    
-    this.customHash = this.seedEncode("192.168.2.65", this.birthday);  
-
+    setTimeout(()=> 
+      this.customHash = this.seedEncode(this.ip, this.birthday)  
+    ,1000);
     this.timestamp = 1;
   }
+
+  async getIP() {
+    const request = await fetch(`https://ip-fast.com/api/ip/?format=json`).then(res => res.json()).then(data => {
+      this.ip = data.ip;
+    });
+    return request;
+    
+  }
+
 
   //gets all the data in database and runs 'checkForUsers' to populate screen
   async getAllData() {
