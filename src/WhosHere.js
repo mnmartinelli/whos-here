@@ -40,10 +40,10 @@ export class WhosHere extends LitElement {
     this.lastAccessedUnmodded = new Date();
     this.lastAccessed = new Date().toISOString().slice(0, 19).replace('T', ' ');
 
-    this.userObj2 = {username: 'xxx', lastTime: `5`};
-    this.userObj3 = {username:'sss', lastTime: `5`};
-    this.users.push(this.userObj2);
-    this.users.push(this.userObj3);
+    // this.userObj2 = {username: 'xxx', lastTime: `5`};
+    // this.userObj3 = {username:'sss', lastTime: `5`};
+    // this.users.push(this.userObj2);
+    // this.users.push(this.userObj3);
 
     //db test stuff below
     this.authEndpoint = '/api/auth';
@@ -136,8 +136,8 @@ export class WhosHere extends LitElement {
     this.timestamp = 1;
 
     //dont need to do this since are making a new user then getting all users
-    this.userObj = {username: `${this.customHash}`, lastTime: `${this.timestamp}`};
-    this.users.push(this.userObj);
+    // this.userObj = {username: `${this.customHash}`, lastTime: `${this.timestamp}`};
+    // this.users.push(this.userObj);
     //dont need above
     
   
@@ -153,7 +153,7 @@ export class WhosHere extends LitElement {
       console.log(`ID: ${user.id} Last Accessed: ${user.last_accessed} Custom Hash: ${user.custom_hash}`);
     });
     this.users = auth;
-    return auth;
+    console.log(this.users);
   }
 
   //test function for the add new user endpoint with db
@@ -386,6 +386,24 @@ changeRPGSize(){
   render() {
     const backgroundImg = new URL('../images/white-background.svg', import.meta.url).href;
     return html`
+      ${this.users.map(user => {
+        html`
+
+          <div class="base">
+            <div class = "ring-color" style = "border-color: #${this.hashCode(user.username)};"></div>
+            <rpg-character class = "rpg" seed = ${user.custom_hash}></rpg-character>
+
+            <span class = "tooltip"> ${user.custom_hash}, Last Accessed: ${user.last_accessed}
+              
+            </span>
+            <img src = "/images/white-background.svg" class = "backing">       
+          
+          </div>
+        
+        `
+      })}
+
+
       ${this.users.map(
       
       // can only edit their own usernames
