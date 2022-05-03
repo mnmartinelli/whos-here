@@ -313,7 +313,7 @@ export class WhosHere extends LitElement {
     } else if(this.timestamp < 20 * 1000){
 
       // Update new timestamp, and update is triggered
-      this.timestamp = (new Date() - this.lastAccessedUnmodded).toISOString().slice(0, 19).replace('T', ' ');
+      this.timestamp = (new Date() - this.lastAccessedUnmodded);
 
       console.log(this.status + ": " + this.timestamp)
 
