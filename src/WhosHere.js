@@ -411,35 +411,37 @@ changeRPGSize(){
   
   render() {
     const backgroundImg = new URL('../images/white-background.svg', import.meta.url).href;
+    console.log(`in render: ${this.users}`);
     return html`
 
-    ${this.users.map(
-    
-    // can only edit their own usernames
-    user => html`
+      ${this.users.map(
+      
+      // can only edit their own usernames
+      user => html`
 
-    <script type="text/javascript"> console.log('n') </script>
-    <div class="base">
-      <div class = "ring-color" style = "border-color: #${this.hashCode(user.custom_hash)};"></div>
-      <rpg-character class = "rpg" seed = ${user.custom_hash}></rpg-character>
+      <script type="text/javascript"> console.log('n') </script>
+      <div class="base">
+        <div class = "ring-color" style = "border-color: #${this.hashCode(user.custom_hash)};"></div>
+        <rpg-character class = "rpg" seed = ${user.custom_hash}></rpg-character>
 
-      <span class = "tooltip"> ${user.custom_hash}, Last Accessed: ${user.last_accessed}
-        
-      </span>
-      <img src = "/images/white-background.svg" class = "backing">       
-    
-    </div>
-    
-    `
-    )}
+        <span class = "tooltip"> ${user.custom_hash}, Last Accessed: ${user.last_accessed}
+          
+        </span>
+        <img src = "/images/white-background.svg" class = "backing">       
+      
+      </div>
+      
+      `
+      )}
 
       <div id="display_users">
         <p>users area</p>
+        <button class="dbtestBtn">test button</button>
       </div>
 
       <div class="testDBBtns">
-       <button class="dbtestBtn" @click=${this.updateLast_Accessed}>delete user</button>
-      <button class="dbtestBtn" @click=${this.deleteUser}>delete user</button>
+        <button class="dbtestBtn" @click=${this.updateLast_Accessed}>delete user</button>
+        <button class="dbtestBtn" @click=${this.deleteUser}>delete user</button>
         <button class="dbtestBtn" @click=${this.getAllData}>Auth Test</button>
         <button class="dbtestBtn" @click=${this.addNewUser}>Post new user</button>
       </div>
