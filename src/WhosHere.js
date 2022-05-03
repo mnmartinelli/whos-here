@@ -119,9 +119,7 @@ export class WhosHere extends LitElement {
 
         console.log('customhash prop changed');
 
-        this.addNewUser();
-
-        this.getAllData();
+        this.addNewUser().then(this.getAllData());
 
         //get all data sets 'checkForUsers' to true so users are populated
       }
@@ -174,7 +172,7 @@ export class WhosHere extends LitElement {
             usersArea.appendChild(newUserDiv);
           })
 
-          , 750);
+          , 500);
 
           this.checkForUsers  = false;
         }
@@ -201,17 +199,13 @@ export class WhosHere extends LitElement {
 
   //gets all the data in database and runs 'checkForUsers' to populate screen
   async getAllData() {
-    let result;
-    const auth = await fetch(`${this.authEndpoint}`)
-      .then(res => result = res.json())
-      .then(this.users = result)
-      .then(this.checkForUsers = true);
+    const auth = await fetch(`${this.authEndpoint}`).then(res => res.json());
     auth.forEach(user => {
       console.log(`ID: ${user.id} Last Accessed: ${user.last_accessed} Custom Hash: ${user.custom_hash}`);
     });
-    // this.users = JSON.parse(JSON.stringify(auth));
+    this.users = JSON.parse(JSON.stringify(auth));
 
-    // this.checkForUsers = true;
+    this.checkForUsers = true;
   }
 
   //adds a new user to db with current last accessed and custom hash
