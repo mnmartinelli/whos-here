@@ -39,28 +39,5 @@
 
   <button id="refresh">Refresh</button>
 
-  <script>
-    // @feedback
-    // this little rewrite to your demo makes it possible to see what
-    // it's like when we visualize it where it would be within an app of some kind
-    // also this sample text is not making fun of any of you, it's more or less what
-    // someone turned in one semester thinking that I don't read articles.
-    // This demo now shows 2 possible positions for the whos-here widget and also
-    // will force you to be mindful of what would happen if there are multiple instances
-    // on a page or that you'll need some variable set somewhere for identifying 
-    // which URL the 'whos-here' widget is for. This way it can relate the data
-    // appropriately.
-
-    // yes, i am this lazy
-    function dqs(sel){ return document.querySelector(sel);}
-    // click handler for btn1
-    dqs("#add1").addEventListener("click", (e) => {
-      dqs("#wh1").addNewUser();
-    });
-    // click handler for btn2
-    dqs("#add2").addEventListener("click", (e) => {
-      dqs("#wh2").addNewUser();
-    });
-  </script>
 </body>
 </html>
