@@ -114,9 +114,7 @@ export class WhosHere extends LitElement {
 
         console.log('customhash prop changed');
 
-        const request = await fetch(`${this.newUserEndpoint}?last_accessed=${currentTime}&custom_hash=${this.customHash}`).then(res => res.json());
-        let result2 = request;
-        console.log(`Added new user. ID: ${result2.id} Last Accessed: ${result2.last_accessed} Custom Hash: ${result2.custom_hash}`);
+        this.addNewUser();
 
         this.getAllData();
 
