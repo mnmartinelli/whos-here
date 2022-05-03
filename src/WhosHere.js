@@ -137,7 +137,7 @@ export class WhosHere extends LitElement {
           usersArea.innerHTML = '';
 
           //updates user area after 1 second to give this.users time to retrieve data
-          setTimeout(() =>
+          // setTimeout(() =>
 
           //puts together each element of each user and appends to div in html
           this.users.forEach(user => {
@@ -174,7 +174,7 @@ export class WhosHere extends LitElement {
             usersArea.appendChild(newUserDiv);
           })
 
-          , 750);
+          // , 750);
 
           this.checkForUsers  = false;
         }
@@ -205,9 +205,7 @@ export class WhosHere extends LitElement {
     auth.forEach(user => {
       console.log(`ID: ${user.id} Last Accessed: ${user.last_accessed} Custom Hash: ${user.custom_hash}`);
     });
-    this.users = JSON.parse(JSON.stringify(auth));
-
-    this.checkForUsers = true;
+    (this.users = JSON.parse(JSON.stringify(auth))).then(this.checkForUsers = true);
   }
 
   //adds a new user to db with current last accessed and custom hash
@@ -407,7 +405,7 @@ export class WhosHere extends LitElement {
         border-color: transparent transparent gray transparent;
       }
 
-       .base:hover .tooltip {
+      .base:hover .tooltip {
         visibility: visible;
       }
     `;
