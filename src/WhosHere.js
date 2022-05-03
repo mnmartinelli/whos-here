@@ -267,7 +267,7 @@ export class WhosHere extends LitElement {
   }
 
   async deleteAllUsers() {
-    const testRequest = await fetch(`${this.deleteUserEndpoint}`).then(res => res.json());
+    const testRequest = await fetch(`${this.deleteAllUsersEndpoint}`).then(res => res.json());
     let result4 = testRequest;
     console.log(result4);
   }
