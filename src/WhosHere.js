@@ -194,9 +194,9 @@ export class WhosHere extends LitElement {
       this.birthday = currentTime;
       console.log(this.birthday);
     }
-    setTimeout(()=> 
-      this.customHash = this.seedEncode(this.ip, this.birthday)  
-    ,1000);
+    //setTimeout(()=> 
+    this.customHash = this.seedEncode("192.168.1.1", this.birthday);
+    //,1000);
     this.timestamp = 1;
   }
 
