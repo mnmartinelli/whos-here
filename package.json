@@ -18,7 +18,7 @@
     "build": "rimraf dist && rollup -c rollup.config.js"
   },
   "dependencies": {
-    "@lrnwebcomponents/rpg-character": "^4.0.23",
+    "@lrnwebcomponents/rpg-character": "^4.0.24",
     "lit": "^2.0.2",
     "planetscale-node": "^0.3.0"
   },
