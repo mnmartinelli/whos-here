@@ -118,7 +118,7 @@ export class WhosHere extends LitElement {
 
         this.getAllData();
 
-        let usersArea = document.querySelector('#display_users');
+        let usersArea = this.shadowRoot.querySelector('#display_users');
 
         usersArea.innerHTML = `${this.users.map(user => {
           html`
