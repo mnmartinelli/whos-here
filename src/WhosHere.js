@@ -120,7 +120,10 @@ export class WhosHere extends LitElement {
 
         let usersArea = this.shadowRoot.querySelector('#display_users');
 
-        usersArea.innerHTML = `${this.users.map(user => 
+
+        let newPersonContainer;
+
+        usersArea.innerHTML = this.users.map(user => 
           html`
   
             <div class="base">
@@ -135,7 +138,7 @@ export class WhosHere extends LitElement {
             </div>
           
           `
-        )}`
+        )
 
       }
     });
