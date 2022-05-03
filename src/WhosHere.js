@@ -46,7 +46,6 @@ export class WhosHere extends LitElement {
     this.users.push(this.userObj3);
 
     //db test stuff below
-    this.auth = {};
     this.authEndpoint = '/api/auth';
     this.newUserEndpoint = '/api/addUser';
     this.updateLastAccessed = '/api/lastAccessed';
@@ -135,8 +134,11 @@ export class WhosHere extends LitElement {
     this.customHash = this.seedEncode("192.168.2.65", this.birthday);  
 
     this.timestamp = 1;
+
+    //dont need to do this since are making a new user then getting all users
     this.userObj = {username: `${this.customHash}`, lastTime: `${this.timestamp}`};
     this.users.push(this.userObj);
+    //dont need above
     
   
     const request = await fetch(`${this.newUserEndpoint}?last_accessed=${currentTime}&custom_hash=${this.customHash}`).then(res => res.json());
@@ -147,6 +149,9 @@ export class WhosHere extends LitElement {
 
   async getAllData() {
     const auth = await fetch(`${this.authEndpoint}`).then(res => res.json());
+    auth.forEach(user => {
+      console.log(`ID: ${user.id} Last Accessed: ${user.last_accessed} Custom Hash: ${user.custom_hash}`);
+    });
     this.users = auth;
     return auth;
   }
