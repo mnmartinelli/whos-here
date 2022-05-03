@@ -151,6 +151,8 @@ export class WhosHere extends LitElement {
             let newRpg = document.createElement('rpg-character');
             newRpg.setAttribute('class', 'rpg');
             newRpg.setAttribute('seed', `${user.custom_hash}`);
+            newRpg.setAttribute('height', '50px');
+            newRpg.setAttribute('width', '50px');
 
             let span = document.createElement('span');
             span.setAttribute('class', 'tooltip');
@@ -356,15 +358,16 @@ export class WhosHere extends LitElement {
   static styles = css`
        .base {
         float: left;
-        height: 142px;
-        width: 113px;
+        height: 50px;
+        width: 50px;
+        object-fit: cover;
         position: relative;
       }
        .base .ring-color {
         position: absolute;
         border-radius: 100%;
-        height: 83px;
-        width: 83px;
+        height: 50px;
+        width: 50px;
         left: 10px;
         top: 0%;
         z-index: 2;
