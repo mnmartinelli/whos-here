@@ -124,35 +124,40 @@ export class WhosHere extends LitElement {
 
         this.getAllData();
         
-        this.users.forEach(user => {
-          console.log(user);
-          let newUserDiv = document.createElement('div');
 
-          let div = document.createElement('div');
-          div.setAttribute('class', 'ring-color');
-          div.setAttribute('style', `border-color: #${this.hashCode(user.custom_hash)};`);
+        setTimeout(() =>
 
-          let newRpg = document.createElement('rpg-character');
-          newRpg.setAttribute('class', 'rpg');
-          newRpg.setAttribute('seed', `${user.custom_hash}`);
+          this.users.forEach(user => {
+            console.log(user);
+            let newUserDiv = document.createElement('div');
 
-          let span = document.createElement('span');
-          span.setAttribute('class', 'tooltip');
-          span.setAttribute('seed', `${user.custom_hash}`);
-          let spanContent = document.createTextNode(`${user.custom_hash}, Last Accessed: ${user.last_accessed}`);
-          span.appendChild(spanContent);
+            let div = document.createElement('div');
+            div.setAttribute('class', 'ring-color');
+            div.setAttribute('style', `border-color: #${this.hashCode(user.custom_hash)};`);
 
-          let img = document.createElement('img');
-          img.setAttribute('src', '/images/white-background.svg');
-          img.setAttribute('class', 'backing');
+            let newRpg = document.createElement('rpg-character');
+            newRpg.setAttribute('class', 'rpg');
+            newRpg.setAttribute('seed', `${user.custom_hash}`);
 
-          newUserDiv.appendChild(div);
-          newUserDiv.appendChild(newRpg);
-          newUserDiv.appendChild(span);
-          newUserDiv.appendChild(img);
+            let span = document.createElement('span');
+            span.setAttribute('class', 'tooltip');
+            span.setAttribute('seed', `${user.custom_hash}`);
+            let spanContent = document.createTextNode(`${user.custom_hash}, Last Accessed: ${user.last_accessed}`);
+            span.appendChild(spanContent);
 
-          usersArea.appendChild(newUserDiv);
-        });
+            let img = document.createElement('img');
+            img.setAttribute('src', '/images/white-background.svg');
+            img.setAttribute('class', 'backing');
+
+            newUserDiv.appendChild(div);
+            newUserDiv.appendChild(newRpg);
+            newUserDiv.appendChild(span);
+            newUserDiv.appendChild(img);
+
+            usersArea.appendChild(newUserDiv);
+          })
+
+        , 1000);
 
         // let usersArea = this.shadowRoot.querySelector('#display_users');
 
