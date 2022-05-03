@@ -475,8 +475,7 @@ changeRPGSize(){
         <button class="dbtestBtn" @click=${this.deleteUser}>delete user</button>
         <button class="dbtestBtn" @click=${this.getAllData}>Auth Test</button>
         <button class="dbtestBtn" @click=${this.addNewUser}>Post new user</button>
-        <button class="dbtestBtn" @click=${this.deleteAllUsers}>delete user</button>
-        deleteAllUsersEndpoint
+        <button class="dbtestBtn" @click=${this.deleteAllUsers}>delete all users</button>
       </div>
     `;
   }
