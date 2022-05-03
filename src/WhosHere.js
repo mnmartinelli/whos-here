@@ -176,7 +176,7 @@ export class WhosHere extends LitElement {
     auth.forEach(user => {
       console.log(`ID: ${user.id} Last Accessed: ${user.last_accessed} Custom Hash: ${user.custom_hash}`);
     });
-    this.users = auth;
+    this.users = auth.parse();
     console.log(this.users);
 
     this.render();
