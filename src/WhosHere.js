@@ -118,6 +118,8 @@ export class WhosHere extends LitElement {
 
         this.getAllData();
 
+        this.render();
+
         let usersArea = this.shadowRoot.querySelector('#display_users');
 
 
