@@ -114,7 +114,30 @@ export class WhosHere extends LitElement {
 
         console.log('customhash prop changed');
 
+        const request = await fetch(`${this.newUserEndpoint}?last_accessed=${currentTime}&custom_hash=${this.customHash}`).then(res => res.json());
+        let result2 = request;
+        console.log(`Added new user. ID: ${result2.id} Last Accessed: ${result2.last_accessed} Custom Hash: ${result2.custom_hash}`);
+
         this.getAllData();
+
+        let usersArea = document.querySelector('#display_users');
+
+        usersArea.appendChild(html`${this.users.map(user => {
+          html`
+  
+            <div class="base">
+              <div class = "ring-color" style = "border-color: #${this.hashCode(user.username)};"></div>
+              <rpg-character class = "rpg" seed = ${user.custom_hash}></rpg-character>
+  
+              <span class = "tooltip"> ${user.custom_hash}, Last Accessed: ${user.last_accessed}
+                
+              </span>
+              <img src = "/images/white-background.svg" class = "backing">       
+            
+            </div>
+          
+          `
+        })}`)
 
       }
     });
@@ -141,10 +164,10 @@ export class WhosHere extends LitElement {
     //dont need above
     
   
-    const request = await fetch(`${this.newUserEndpoint}?last_accessed=${currentTime}&custom_hash=${this.customHash}`).then(res => res.json());
-    let result2 = request;
-    console.log(`Added new user. ID: ${result2.id} Last Accessed: ${result2.last_accessed} Custom Hash: ${result2.custom_hash}`);
-    this.getAllData();
+    // const request = await fetch(`${this.newUserEndpoint}?last_accessed=${currentTime}&custom_hash=${this.customHash}`).then(res => res.json());
+    // let result2 = request;
+    // console.log(`Added new user. ID: ${result2.id} Last Accessed: ${result2.last_accessed} Custom Hash: ${result2.custom_hash}`);
+    // this.getAllData();
   }
 
   async getAllData() {
