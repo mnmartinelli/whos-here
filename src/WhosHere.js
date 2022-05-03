@@ -56,7 +56,7 @@ export class WhosHere extends LitElement {
     this.deleteUserEndpoint = '/api/deleteUser';
     this.deleteAllUsersEndpoint = '/api/deleteAllUsers';
 
-    this.customHash;
+    // this.customHash;
     
     this.newUserActivities();
 
