@@ -118,29 +118,27 @@ export class WhosHere extends LitElement {
 
         this.getAllData();
 
-        this.render();
-
-        let usersArea = this.shadowRoot.querySelector('#display_users');
+        // let usersArea = this.shadowRoot.querySelector('#display_users');
 
 
-        let newPersonContainer;
+        // let newPersonContainer;
 
-        usersArea.innerHTML = this.users.map(user => 
-          html`
+        // usersArea.innerHTML = this.users.map(user => 
+        //   html`
   
-            <div class="base">
-              <div class = "ring-color" style = "border-color: #${this.hashCode(user.username)};"></div>
-              <rpg-character class = "rpg" seed = ${user.custom_hash}></rpg-character>
+        //     <div class="base">
+        //       <div class = "ring-color" style = "border-color: #${this.hashCode(user.username)};"></div>
+        //       <rpg-character class = "rpg" seed = ${user.custom_hash}></rpg-character>
   
-              <span class = "tooltip"> ${user.custom_hash}, Last Accessed: ${user.last_accessed}
+        //       <span class = "tooltip"> ${user.custom_hash}, Last Accessed: ${user.last_accessed}
                 
-              </span>
-              <img src = "/images/white-background.svg" class = "backing">       
+        //       </span>
+        //       <img src = "/images/white-background.svg" class = "backing">       
             
-            </div>
+        //     </div>
           
-          `
-        )
+        //   `
+        // )
 
       }
     });
@@ -180,6 +178,8 @@ export class WhosHere extends LitElement {
     });
     this.users = auth;
     console.log(this.users);
+
+    this.render();
   }
 
   //test function for the add new user endpoint with db
