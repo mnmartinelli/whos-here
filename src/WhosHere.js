@@ -151,8 +151,8 @@ export class WhosHere extends LitElement {
             let newRpg = document.createElement('rpg-character');
             newRpg.setAttribute('class', 'rpg');
             newRpg.setAttribute('seed', `${user.custom_hash}`);
-            newRpg.setAttribute('height', '50px');
-            newRpg.setAttribute('width', '50px');
+            newRpg.setAttribute('height', '50');
+            newRpg.setAttribute('width', '50');
 
             let span = document.createElement('span');
             span.setAttribute('class', 'tooltip');
