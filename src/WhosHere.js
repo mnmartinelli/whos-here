@@ -120,7 +120,7 @@ export class WhosHere extends LitElement {
 
         let usersArea = document.querySelector('#display_users');
 
-        usersArea.appendChild(html`${this.users.map(user => {
+        usersArea.innerHTML = `${this.users.map(user => {
           html`
   
             <div class="base">
@@ -135,7 +135,7 @@ export class WhosHere extends LitElement {
             </div>
           
           `
-        })}`)
+        })}`
 
       }
     });
