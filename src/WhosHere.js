@@ -172,7 +172,7 @@ export class WhosHere extends LitElement {
             usersArea.appendChild(newUserDiv);
           })
 
-          , 500);
+          , 1000);
 
           this.checkForUsers  = false;
         }
