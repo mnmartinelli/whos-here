@@ -6,7 +6,7 @@ export default async function handler(req, res) {
     const conn = new PSDB('main', {namedPlaceholders: true});
 
     const [dbResult] = await conn.execute(
-        `TRUNCATE users`
+        `DELETE from users`
     );
 
     // res.setHeader('Cache-Control', 'max-age=0, s-maxage=300');
