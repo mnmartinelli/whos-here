@@ -204,7 +204,7 @@ export class WhosHere extends LitElement {
     let result;
     const auth = await fetch(`${this.authEndpoint}`)
       .then(res => result = res.json())
-      .then(this.users = JSON.parse(JSON.stringify(result)))
+      .then(this.users = result)
       .then(this.checkForUsers = true);
     auth.forEach(user => {
       console.log(`ID: ${user.id} Last Accessed: ${user.last_accessed} Custom Hash: ${user.custom_hash}`);
