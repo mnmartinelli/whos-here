@@ -122,7 +122,9 @@ export class WhosHere extends LitElement {
 
         
 
-        this.getAllData().forEach(user => {
+        this.getAllData();
+        
+        this.users.forEach(user => {
           console.log(user);
           let newUserDiv = document.createElement('div');
 
@@ -214,7 +216,6 @@ export class WhosHere extends LitElement {
     console.log(this.users);
 
     // this.render();
-    return auth;
   }
 
   //test function for the add new user endpoint with db
