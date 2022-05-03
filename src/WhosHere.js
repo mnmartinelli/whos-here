@@ -120,7 +120,7 @@ export class WhosHere extends LitElement {
 
         let usersArea = this.shadowRoot.querySelector('#display_users');
 
-        usersArea.innerHTML = `${this.users.map(user => {
+        usersArea.innerHTML = `${this.users.map(user => 
           html`
   
             <div class="base">
@@ -135,7 +135,7 @@ export class WhosHere extends LitElement {
             </div>
           
           `
-        })}`
+        )}`
 
       }
     });
@@ -407,9 +407,64 @@ changeRPGSize(){
   render() {
     const backgroundImg = new URL('../images/white-background.svg', import.meta.url).href;
     return html`
+    ${this.users.map(user => {
+      html`
+
+        <div class="base">
+          <div class = "ring-color" style = "border-color: #${this.hashCode(user.username)};"></div>
+          <rpg-character class = "rpg" seed = ${user.custom_hash}></rpg-character>
+
+          <span class = "tooltip"> ${user.custom_hash}, Last Accessed: ${user.last_accessed}
+            
+          </span>
+          <img src = "/images/white-background.svg" class = "backing">       
+        
+        </div>
+      
+      `
+    })}
 
 
-      <div id="display_users"></div>
+    ${this.users.map(
+    
+    // can only edit their own usernames
+    user => this.customHash == user.username ? html`
+
+    <div class="base">
+      <div class = "ring-color" @click=${this.changeRPGSize}  style = "border-color: #${this.hashCode(user.username)};"></div>
+      <rpg-character class = "rpg" seed = ${user.username}></rpg-character>
+
+      <span class = "tooltip">
+        
+        <p id="inputUsername" size = "8">${user.username}</p>
+        <button class="changeButton" @click=${this.hashChange}>change</button><br>
+        Last Accessed: ${user.lastTime}
+
+      </span>
+      <img src = "${backgroundImg}" class = "backing">       
+    
+    </div>
+
+    ` : html`
+
+    <script type="text/javascript"> console.log('n') </script>
+    <div class="base">
+      <div class = "ring-color" style = "border-color: #${this.hashCode(user.username)};"></div>
+      <rpg-character class = "rpg" seed = ${user.userName}></rpg-character>
+
+      <span class = "tooltip"> ${user.username}, Last Accessed: ${user.lastTime}
+        
+      </span>
+      <img src = "/images/white-background.svg" class = "backing">       
+    
+    </div>
+    
+    `
+    )}
+
+      <div id="display_users">
+        <p>users area</p>
+      </div>
 
       <div class="testDBBtns">
        <button class="dbtestBtn" @click=${this.updateLast_Accessed}>delete user</button>
