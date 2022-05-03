@@ -11,7 +11,7 @@ export class WhosHere extends LitElement {
 
       userObj: { type: Object },
 
-      users: { type: Array },
+      // users: { type: Array },
 
       timestamp: { type: Number},
 
@@ -176,7 +176,7 @@ export class WhosHere extends LitElement {
     auth.forEach(user => {
       console.log(`ID: ${user.id} Last Accessed: ${user.last_accessed} Custom Hash: ${user.custom_hash}`);
     });
-    this.users = auth.parse();
+    this.users = JSON.parse(auth);
     console.log(this.users);
 
     this.render();
