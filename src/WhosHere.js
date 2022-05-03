@@ -201,9 +201,10 @@ export class WhosHere extends LitElement {
 
   //gets all the data in database and runs 'checkForUsers' to populate screen
   async getAllData() {
+    let result;
     const auth = await fetch(`${this.authEndpoint}`)
-      .then(res => res.json())
-      .then(this.users = JSON.parse(JSON.stringify(res)))
+      .then(res => result = res.json())
+      .then(this.users = JSON.parse(JSON.stringify(result)))
       .then(this.checkForUsers = true);
     auth.forEach(user => {
       console.log(`ID: ${user.id} Last Accessed: ${user.last_accessed} Custom Hash: ${user.custom_hash}`);
