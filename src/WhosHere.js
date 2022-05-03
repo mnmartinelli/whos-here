@@ -100,7 +100,7 @@ export class WhosHere extends LitElement {
     changedProperties.forEach((oldValue, propName) => {
      if(propName === 'timestamp' && this[propName]){
         
-        Object.assign(this.userObj, { lastTime: this.timestamp});
+        // Object.assign(this.userObj, { lastTime: this.timestamp});
         super.update(changedProperties);
 
         this.activiteTime();     
