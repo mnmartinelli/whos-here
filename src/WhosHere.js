@@ -23,6 +23,7 @@ export class WhosHere extends LitElement {
       updateHash: { type: String },
       updateLastAccessed: { type: String },
       deleteUserEndpoint: { type: String },
+      deleteAllUsersEndpoint: { type: String },
 
       // usersArray: { type: Array, reflect: true },
 
@@ -50,6 +51,7 @@ export class WhosHere extends LitElement {
     this.newUserEndpoint = '/api/addUser';
     this.updateLastAccessed = '/api/lastAccessed';
     this.deleteUserEndpoint = '/api/deleteUser';
+    this.deleteAllUsersEndpoint = '/api/deleteAllUsers';
 
     this.customHash;
     
@@ -264,6 +266,12 @@ export class WhosHere extends LitElement {
     console.log(result3);
   }
 
+  async deleteAllUsers() {
+    const testRequest = await fetch(`${this.deleteUserEndpoint}`).then(res => res.json());
+    let result4 = testRequest;
+    console.log(result4);
+  }
+
   async updateLast_Accessed() {
 
     let testHash = "hello";
@@ -467,6 +475,8 @@ changeRPGSize(){
         <button class="dbtestBtn" @click=${this.deleteUser}>delete user</button>
         <button class="dbtestBtn" @click=${this.getAllData}>Auth Test</button>
         <button class="dbtestBtn" @click=${this.addNewUser}>Post new user</button>
+        <button class="dbtestBtn" @click=${this.deleteAllUsers}>delete user</button>
+        deleteAllUsersEndpoint
       </div>
     `;
   }
