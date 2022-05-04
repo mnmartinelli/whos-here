@@ -11,7 +11,6 @@ export class WhosHere extends LitElement {
 
       userObj: { type: Object },
 
-
       timestamp: { type: Number},
 
       customHash: { type: String, reflect: true },
@@ -41,6 +40,14 @@ export class WhosHere extends LitElement {
     //   this.deleteUser();
     //   e.returnValue = '';
     // });
+    this.anonyNames = ['Alligator', 'Anteater', 'Armadillo', 'Auroch', 'Axolotl', 'Badger', 'Bat', 'Bear', 'Beaver', 'Blobfish',
+    'Buffalo', 'Camel', 'Chameleon', 'Cheetah', 'Chipmunk', 'Chinchilla', 'Chupacabra', 'Cormorant', 'Coyote', 'Crow', 'Dingo',
+    'Dinosaur', 'Dog', 'Dolphin', 'Dragon', 'Duck', 'Octopus', 'Elephant', 'Ferret', 'Fox', 'Frog', 'Giraffe', 'Goose', 'Gopher',
+    'Grizzly', 'Hamster', 'Hedgehog', 'Hippo', 'Hyena', 'Jackal', 'Jackalope', 'Ibex', 'Ifrit', 'Iguana', 'Kangaroo', 'Kiwi', 'Koala', 'Kraken',
+    'Lemur', 'Leopard', 'Liger', 'Lion', 'Llama', 'Manatee', 'Mink', 'Monkey', 'Moose', 'Narwhal', 'Nyan cat', 'Orangutan', 'Otter', 'Panda', 'Penguin',
+    'Platypus', 'Python', 'Pumpkin', 'Quagga', 'Quokka', 'Rabbit', 'Raccoon', 'Rhino', 'Sheep', 'Shrew', 'Skunk', 'Slow Loris', 'Squirrel', 'Tiger', 'Turtle',
+    'Unicorn', 'Walrus', 'Wolf', 'Wolverine', 'Wombat'];
+    
 
     //Later, we will get users from database to fill array.
     this.users = [];
@@ -79,7 +86,7 @@ export class WhosHere extends LitElement {
   seedEncode(str1, str2) {
     let ip = str1;
     let birthday = str2.substring(14,19);
-    let lasttwo = str1.substring(10,12) + str2.substring(17,19);
+    let lasttwo =  str2.substring(17,19);
     let seed = BigInt(1);
 
     for (let i=0; i< ip.length; i++) {
@@ -153,7 +160,7 @@ export class WhosHere extends LitElement {
                 let span = document.createElement('span');
                 span.setAttribute('class', 'tooltip');
                 span.setAttribute('seed', `${user.custom_hash}`);
-                let spanContent = document.createTextNode(`${user.custom_hash}, Last Accessed: ${user.last_accessed}`);
+                let spanContent = document.createTextNode(`Anonymous ${this.getRandomUsername()}, Last Accessed: ${user.last_accessed}`);
                 span.appendChild(spanContent);
 
                 let img = document.createElement('img');
@@ -216,7 +223,7 @@ export class WhosHere extends LitElement {
             let span = document.createElement('span');
             span.setAttribute('class', 'tooltip');
             span.setAttribute('seed', `${user.custom_hash}`);
-            let spanContent = document.createTextNode(`${user.custom_hash}, Last Accessed: ${user.last_accessed}`);
+            let spanContent = document.createTextNode(`Anonymous ${this.getRandomUsername()}, Last Accessed: ${user.last_accessed}`);
             span.appendChild(spanContent);
 
             let img = document.createElement('img');
@@ -249,7 +256,12 @@ export class WhosHere extends LitElement {
       this.birthday = currentTime;
       console.log(this.birthday);
     }
-    this.customHash = this.seedEncode('192.168.1.1', this.birthday) 
+    let num = Math.floor(Math.random() * 192168113343474589) + 753272641578;
+    let txt = num.toString(16);
+    console.log(txt);
+
+    this.customHash = this.seedEncode(txt, this.birthday);
+    console.log(this.customHash);
     this.timestamp = 1;
   }
 
@@ -270,6 +282,31 @@ export class WhosHere extends LitElement {
     const request = await fetch(`${this.newUserEndpoint}?last_accessed=${this.lastAccessed}&custom_hash=${this.customHash}`).then(res => res.json());
     let result2 = request;
     console.log(`Added new user. ID: ${result2.id} Last Accessed: ${result2.last_accessed} Custom Hash: ${result2.custom_hash}`);
+  }
+
+  //just to test adding new users with button
+  //still have to wait 30 seconds to see people
+  async postNewUserTest() {
+    this.birthday = null;
+    console.log('2');
+
+    let currentTime = this.lastAccessed;
+    if (this.birthday === null) {
+      this.birthday = currentTime;
+      console.log(this.birthday);
+    }
+    let num = Math.floor(Math.random() * 192168113343474589) + 753272641578;
+    let txt = num.toString(16);
+    console.log(txt);
+
+    let testCustomHash = this.seedEncode(txt, this.birthday);
+    console.log(testCustomHash);
+
+    const request = await fetch(`${this.newUserEndpoint}?last_accessed=${this.lastAccessed}&custom_hash=${testCustomHash}`).then(res => res.json());
+    let result2 = request;
+    console.log(`Added new user. ID: ${result2.id} Last Accessed: ${result2.last_accessed} Custom Hash: ${result2.custom_hash}`);
+
+    this.getAllData();
   }
 
   // async getLastAccessedTime() {
@@ -305,6 +342,12 @@ export class WhosHere extends LitElement {
     const testRequest = await fetch(`${this.deleteAllUsersEndpoint}`).then(res => res.json());
     let result4 = testRequest;
     console.log(result4);
+  }
+
+  getRandomUsername() {
+    let anonyUsername;
+    anonyUsername = this.anonyNames[Math.floor(Math.random() * this.anonyNames.length)];
+    return anonyUsername;
   }
 
   async updateLast_Accessed() {
@@ -436,7 +479,7 @@ export class WhosHere extends LitElement {
         position: absolute;
         z-index: -1;
       }
-       .base .tooltip {
+      .base .tooltip {
         visibility: hidden;
         width: 100px;
         background-color: gray;
@@ -444,18 +487,17 @@ export class WhosHere extends LitElement {
         text-align: center;
         border-radius: 6px;
         padding: 5px;
-        right: -60%
         position: absolute;
         z-index: 3;
-        top: 100%;
+        top: 70%;
         margin-left: -2%;
       }
 
-       .base .tooltip::after {
+      .base .tooltip::after {
         content: '';
         position: absolute;
         bottom: 100%; /* At the bottom of the tooltip */
-        left: 50%;
+        left: 20%;
         margin-left: -5px;
         border-width: 5px;
         border-style: solid;
@@ -472,10 +514,9 @@ export class WhosHere extends LitElement {
       <div id="display_users"></div>
 
       <div class="testDBBtns">
-        <button class="dbtestBtn" @click=${this.updateLast_Accessed}>delete user</button>
         <button class="dbtestBtn" @click=${this.deleteUser}>delete user</button>
         <button class="dbtestBtn" @click=${this.getAllData}>Auth Test</button>
-        <button class="dbtestBtn" @click=${this.addNewUser}>Post new user</button>
+        <button class="dbtestBtn" @click=${this.postNewUserTest}>Post new user</button>
         <button class="dbtestBtn" @click=${this.deleteAllUsers}>delete all users</button>
       </div>
     `;

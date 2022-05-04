@@ -2,7 +2,7 @@
 
 This webcomponent follows the [open-wc](https://github.com/open-wc/open-wc) recommendation.
 
-[OpenAPI Documentation](https://ist402.stoplight.io/docs/whos-here)
+[OpenAPI Documentation](https://app.swaggerhub.com/apis-docs/ist-team-f/whoshere/1.0.0)
 
 ## Installation
 
