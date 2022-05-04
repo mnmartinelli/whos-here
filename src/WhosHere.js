@@ -282,6 +282,19 @@ export class WhosHere extends LitElement {
       //this timeout is needed for ip to finish its promise, or rpg character wont load.
       console.log(IPClass.ip);
       this.generateHash = this.seedEncode(IPClass.ip, this.birthday);
+      this.getAllData(); //call to pull db
+      this.oldUsers = this.users;
+
+      //this might need a setTimeout idk?
+      forEach(user =>{
+        if(user.customHash === this.generateHash) {
+          console.log('custom hash already in db!!!!')
+        }
+        else {
+          console.log('customhash NOT FOUND!')
+        }
+      })
+
       this.customHash = this.seedEncode(IPClass.ip, this.birthday);
 
       //logic for if you are already in the db
