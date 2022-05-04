@@ -11,13 +11,14 @@ export class WhosHere extends LitElement {
 
       userObj: { type: Object },
 
-      // users: { type: Array },
 
       timestamp: { type: Number},
 
       customHash: { type: String, reflect: true },
 
       checkForUsers: { type: Boolean },
+
+      startCounter: { type: Boolean },
       //db test stuff below
       authEndpoint: { type: String },
       auth: { type: Array },
@@ -26,9 +27,8 @@ export class WhosHere extends LitElement {
       updateLastAccessed: { type: String },
       deleteUserEndpoint: { type: String },
       deleteAllUsersEndpoint: { type: String },
-      ip: { type: String, reflect: true },
+      ip: { type: String},
 
-      // usersArray: { type: Array, reflect: true },
 
     };
   }
@@ -38,13 +38,13 @@ export class WhosHere extends LitElement {
 
     //Later, we will get users from database to fill array.
     this.users = [];
-    this.alldata =[];
-    this.userObj;
+    this.oldUsers = [];
 
     this.lastAccessedUnmodded = new Date();
     this.lastAccessed = new Date().toISOString().slice(0, 19).replace('T', ' ');
 
     this.checkForUsers = false;
+    this.startCounter = false;
 
     //db test stuff below
     this.authEndpoint = '/api/auth';
@@ -53,12 +53,7 @@ export class WhosHere extends LitElement {
     this.deleteUserEndpoint = '/api/deleteUser';
     this.deleteAllUsersEndpoint = '/api/deleteAllUsers';
 
-    //ip test
-    this.ip = null;
-
     this.newUserActivities();
-
-
   }
 
   //For ring color
@@ -98,17 +93,83 @@ export class WhosHere extends LitElement {
   }
 
   update(changedProperties) {
-    console.log(changedProperties)
 
     changedProperties.forEach((oldValue, propName) => {
      if(propName === 'timestamp' && this[propName]){
         
-        // Object.assign(this.userObj, { lastTime: this.timestamp});
         super.update(changedProperties);
 
         this.activiteTime();     
 
       }
+
+      if (propName === 'startCounter' && this[propName]) {
+        //alright so this one will poll every 30 seconds and find whos here
+        //the duplicate code below in checkforusers is needed to load immediately.
+        //dont be mad
+        //sometimes the shitty code is the best code ;) 
+
+        //one problem: you youself are not loaded until 30 seconds have passed
+        setInterval(() => 
+        {
+          this.oldUsers = this.users;
+          
+          this.getAllData();
+          
+          console.log(this.users);
+          //this.checkForUsers = true;
+          setTimeout(() => {
+            if(this.oldUsers === this.users) {
+              console.log('if statement');
+            }
+            else {
+              console.log('i made it !');
+              let usersArea = this.shadowRoot.querySelector('#display_users');
+
+              usersArea.innerHTML = '';
+
+              //puts together each element of each user and appends to div in html
+              this.users.forEach(user => {
+                console.log(user);
+                
+                let newUserDiv = document.createElement('div');
+                newUserDiv.setAttribute('class', 'base');
+
+                let div = document.createElement('div');
+                div.setAttribute('class', 'ring-color');
+                div.setAttribute('style', `border-color: #${this.hashCode(user.custom_hash)};`);
+
+                let newRpg = document.createElement('rpg-character');
+                newRpg.setAttribute('class', 'rpg');
+                newRpg.setAttribute('seed', `${user.custom_hash}`);
+                newRpg.setAttribute('height', '50');
+                newRpg.setAttribute('width', '50');
+
+                let span = document.createElement('span');
+                span.setAttribute('class', 'tooltip');
+                span.setAttribute('seed', `${user.custom_hash}`);
+                let spanContent = document.createTextNode(`${user.custom_hash}, Last Accessed: ${user.last_accessed}`);
+                span.appendChild(spanContent);
+
+                let img = document.createElement('img');
+
+                img.setAttribute('class', 'backing');
+
+                newUserDiv.appendChild(div);
+                newUserDiv.appendChild(newRpg);
+                newUserDiv.appendChild(span);
+                newUserDiv.appendChild(img);
+
+                usersArea.appendChild(newUserDiv);
+              })
+            }
+          }, 1000);
+        }
+        , 30000);
+
+      }
+      
+
       if (propName === 'customHash' && this[propName]) {
 
         console.log(this.customHash)
@@ -118,16 +179,13 @@ export class WhosHere extends LitElement {
 
         this.addNewUser().then(this.getAllData());
 
-        //get all data sets 'checkForUsers' to true so users are populated
       }
 
       if(propName === 'checkForUsers' && this[propName]){
+        //this is the duplicate code. WELCOME.
         if(this.checkForUsers === true){
 
           let usersArea = this.shadowRoot.querySelector('#display_users');
-
-          //thinking we dont need this now
-          // const backgroundImg = new URL('../images/white-background.svg', import.meta.url).href;
 
           usersArea.innerHTML = '';
 
@@ -137,6 +195,7 @@ export class WhosHere extends LitElement {
           //puts together each element of each user and appends to div in html
           this.users.forEach(user => {
             console.log(user);
+            console.log("i ran but i suck");
             let newUserDiv = document.createElement('div');
             newUserDiv.setAttribute('class', 'base');
 
@@ -157,8 +216,6 @@ export class WhosHere extends LitElement {
             span.appendChild(spanContent);
 
             let img = document.createElement('img');
-            //thinking we dont need this now
-            // img.setAttribute('src', `${backgroundImg}`);
             img.setAttribute('class', 'backing');
 
             newUserDiv.appendChild(div);
@@ -179,33 +236,17 @@ export class WhosHere extends LitElement {
 
   //sets custom hash and timestamp
   async newUserActivities(){
-    //add ip
-    if (this.ip === null) {
-      this.ip = this.getIP();
-      setTimeout(()=> 
-      console.log(this.ip)
-      ,1000);
-    }
+    
     this.birthday = null;
-
+    console.log('2');
 
     let currentTime = this.lastAccessed;
     if (this.birthday === null) {
       this.birthday = currentTime;
       console.log(this.birthday);
     }
-    //setTimeout(()=> 
-    this.customHash = this.seedEncode("192.168.1.1", this.birthday);
-    //,1000);
+    this.customHash = this.seedEncode('192.168.1.1', this.birthday) 
     this.timestamp = 1;
-  }
-
-  async getIP() {
-    const request = await fetch(`https://ip-fast.com/api/ip/?format=json`).then(res => res.json()).then(data => {
-      this.ip = data.ip;
-    });
-    return request;
-    
   }
 
 
@@ -216,8 +257,10 @@ export class WhosHere extends LitElement {
       console.log(`ID: ${user.id} Last Accessed: ${user.last_accessed} Custom Hash: ${user.custom_hash}`);
     });
     this.users = JSON.parse(JSON.stringify(auth));
+    console.log(this.users);
 
     this.checkForUsers = true;
+    this.startCounter = true;
   }
 
   //adds a new user to db with current last accessed and custom hash
