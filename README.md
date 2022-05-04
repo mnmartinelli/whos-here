@@ -2,6 +2,8 @@
 
 This webcomponent follows the [open-wc](https://github.com/open-wc/open-wc) recommendation.
 
+[OpenAPI Documentation](https://ist402.stoplight.io/docs/whos-here)
+
 ## Installation
 
 ```bash

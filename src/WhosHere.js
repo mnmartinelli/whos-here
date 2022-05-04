@@ -36,6 +36,12 @@ export class WhosHere extends LitElement {
   constructor() {
     super();
 
+    // window.addEventListener("beforeunload", () => this.deleteUser());
+    // window.addEventListener('beforeunload', (e) => {
+    //   this.deleteUser();
+    //   e.returnValue = '';
+    // });
+
     //Later, we will get users from database to fill array.
     this.users = [];
     this.oldUsers = [];
@@ -120,10 +126,9 @@ export class WhosHere extends LitElement {
           //this.checkForUsers = true;
           setTimeout(() => {
             if(this.oldUsers === this.users) {
-              console.log('if statement');
+              //does nothing
             }
             else {
-              console.log('i made it !');
               let usersArea = this.shadowRoot.querySelector('#display_users');
 
               usersArea.innerHTML = '';
@@ -195,7 +200,6 @@ export class WhosHere extends LitElement {
           //puts together each element of each user and appends to div in html
           this.users.forEach(user => {
             console.log(user);
-            console.log("i ran but i suck");
             let newUserDiv = document.createElement('div');
             newUserDiv.setAttribute('class', 'base');
 
@@ -253,9 +257,7 @@ export class WhosHere extends LitElement {
   //gets all the data in database and runs 'checkForUsers' to populate screen
   async getAllData() {
     const auth = await fetch(`${this.authEndpoint}`).then(res => res.json());
-    auth.forEach(user => {
-      console.log(`ID: ${user.id} Last Accessed: ${user.last_accessed} Custom Hash: ${user.custom_hash}`);
-    });
+
     this.users = JSON.parse(JSON.stringify(auth));
     console.log(this.users);
 
@@ -284,10 +286,9 @@ export class WhosHere extends LitElement {
     //gets all data
     const auth = await fetch(`${this.authEndpoint}`).then(res => res.json());
     let result1 = auth;
-
     //checks if there is a user in db with same hash as this user
     result1.forEach(node => {
-        if(testHash === node.custom_hash){
+        if(this.customHash === node.custom_hash){
             deleted_hash = node.custom_hash;
         }
     });
@@ -378,7 +379,8 @@ export class WhosHere extends LitElement {
     }
     else {
 
-      console.log("deleted from database")
+      console.log('deleted from database');
+      this.deleteUser();
 
     }
 
