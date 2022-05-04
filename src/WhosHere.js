@@ -1,5 +1,6 @@
 import { html, css, LitElement } from 'lit';
 import '@lrnwebcomponents/rpg-character/rpg-character.js';
+import { UserIP } from './UserIP.js';
 
 export class WhosHere extends LitElement {
   static get tag() {
@@ -27,6 +28,7 @@ export class WhosHere extends LitElement {
       deleteUserEndpoint: { type: String },
       deleteAllUsersEndpoint: { type: String },
       ip: { type: String},
+      ipTest: { type: String},
 
 
     };
@@ -34,7 +36,7 @@ export class WhosHere extends LitElement {
 
   constructor() {
     super();
-
+    this.UserIpInstance = new UserIP();
     // window.addEventListener("beforeunload", () => this.deleteUser());
     // window.addEventListener('beforeunload', (e) => {
     //   this.deleteUser();
@@ -47,7 +49,6 @@ export class WhosHere extends LitElement {
     'Lemur', 'Leopard', 'Liger', 'Lion', 'Llama', 'Manatee', 'Mink', 'Monkey', 'Moose', 'Narwhal', 'Nyan cat', 'Orangutan', 'Otter', 'Panda', 'Penguin',
     'Platypus', 'Python', 'Pumpkin', 'Quagga', 'Quokka', 'Rabbit', 'Raccoon', 'Rhino', 'Sheep', 'Shrew', 'Skunk', 'Slow Loris', 'Squirrel', 'Tiger', 'Turtle',
     'Unicorn', 'Walrus', 'Wolf', 'Wolverine', 'Wombat'];
-    
 
     //Later, we will get users from database to fill array.
     this.users = [];
@@ -244,13 +245,19 @@ export class WhosHere extends LitElement {
       }
     });
   }
-
+  
   //sets custom hash and timestamp
   async newUserActivities(){
     
     this.birthday = null;
     console.log('2');
-
+    const IPClass = new UserIP();
+    const userIPData = IPClass.updateUserIP();
+    setTimeout(() =>
+    {
+      console.log(IPClass.ip);
+    }, 1000);
+    this.ipTest = IPClass.ip;
     let currentTime = this.lastAccessed;
     if (this.birthday === null) {
       this.birthday = currentTime;
@@ -259,13 +266,13 @@ export class WhosHere extends LitElement {
     let num = Math.floor(Math.random() * 192168113343474589) + 753272641578;
     let txt = num.toString(16);
     console.log(txt);
-
-    this.customHash = this.seedEncode(txt, this.birthday);
-    console.log(this.customHash);
+    setTimeout(() =>
+    {
+      this.customHash = this.seedEncode(IPClass.ip, this.birthday);
+      console.log(this.customHash);
+    }, 1000);
     this.timestamp = 1;
   }
-
-
   //gets all the data in database and runs 'checkForUsers' to populate screen
   async getAllData() {
     const auth = await fetch(`${this.authEndpoint}`).then(res => res.json());
