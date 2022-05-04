@@ -15,7 +15,7 @@ export class WhosHere extends LitElement {
       timestamp: { type: Number},
 
       customHash: { type: String, reflect: true },
-
+      generateHash: { type: String, reflect: true },
       checkForUsers: { type: Boolean },
 
       startCounter: { type: Boolean },
@@ -28,7 +28,6 @@ export class WhosHere extends LitElement {
       deleteUserEndpoint: { type: String },
       deleteAllUsersEndpoint: { type: String },
       ip: { type: String},
-      ipTest: { type: String},
 
 
     };
@@ -85,25 +84,42 @@ export class WhosHere extends LitElement {
   } 
 
   seedEncode(str1, str2) {
-    let ip = str1;
-    let birthday = str2.substring(14,19);
-    let lasttwo =  str2.substring(17,19);
+    let ip = str1.toString();
     let seed = BigInt(1);
-
     for (let i=0; i< ip.length; i++) {
-      for (let j=0; j< birthday.length; j++) {
-        if (i<64) {
-          seed = BigInt(seed) * BigInt(ip.charCodeAt(i));
-        }
-        if (j<34) {
-          seed = BigInt(seed) + BigInt(birthday.charCodeAt(j));
-        }
+      seed = BigInt(seed) * BigInt(ip.charCodeAt(i));
+      seed = BigInt(seed) + BigInt(ip.charCodeAt(i)); //to make more random
+      // if (i<64) {
+      //   seed = BigInt(seed) * BigInt(ip.charCodeAt(i));
+      // }
+        //seed = BigInt(seed)-BigInt(lasttwo);
       }
-      seed = BigInt(seed)-BigInt(lasttwo);
-
-    }
     seed = BigInt(seed).toString();
-    return seed.substring(str1.substring(11,12),32);
+    console.log(seed);
+    //removed birthday, bc on refresh you wont have a birthday saved
+    //and adding birthday to the database would cause more setTimeout calls bc await wont fufill
+    //its promises
+    
+
+    // let ip = str1;
+    // let birthday = str2.substring(14,19);
+    // //let lasttwo =  str2.substring(17,19);
+    // let seed = BigInt(1);
+
+    // for (let i=0; i< ip.length; i++) {
+    //   for (let j=0; j< birthday.length; j++) {
+    //     if (i<64) {
+    //       seed = BigInt(seed) * BigInt(ip.charCodeAt(i));
+    //     }
+    //     if (j<34) {
+    //       seed = BigInt(seed) + BigInt(birthday.charCodeAt(j));
+    //     }
+    //   }
+    //   //seed = BigInt(seed)-BigInt(lasttwo);
+
+    // }
+    // seed = BigInt(seed).toString();
+    return seed;
   }
 
   update(changedProperties) {
@@ -248,16 +264,11 @@ export class WhosHere extends LitElement {
   
   //sets custom hash and timestamp
   async newUserActivities(){
-    
-    this.birthday = null;
-    console.log('2');
+    //ip calls
     const IPClass = new UserIP();
     const userIPData = IPClass.updateUserIP();
-    setTimeout(() =>
-    {
-      console.log(IPClass.ip);
-    }, 1000);
-    this.ipTest = IPClass.ip;
+
+    this.birthday = null;
     let currentTime = this.lastAccessed;
     if (this.birthday === null) {
       this.birthday = currentTime;
@@ -268,8 +279,14 @@ export class WhosHere extends LitElement {
     console.log(txt);
     setTimeout(() =>
     {
+      //this timeout is needed for ip to finish its promise, or rpg character wont load.
+      console.log(IPClass.ip);
+      this.generateHash = this.seedEncode(IPClass.ip, this.birthday);
       this.customHash = this.seedEncode(IPClass.ip, this.birthday);
-      console.log(this.customHash);
+
+      //logic for if you are already in the db
+      this.oldUsers = this.users;
+      this.getAllData();
     }, 1000);
     this.timestamp = 1;
   }
