@@ -288,10 +288,10 @@ export class WhosHere extends LitElement {
       //this might need a setTimeout idk?
       this.oldUsers.forEach(user =>{
         if(user.customHash === this.generateHash) {
-          console.log('custom hash already in db!!!!')
+          console.log('custom hash already in db!!!!');
         }
         else {
-          console.log('customhash NOT FOUND!')
+          console.log('customhash NOT FOUND!');
         }
       })
 
